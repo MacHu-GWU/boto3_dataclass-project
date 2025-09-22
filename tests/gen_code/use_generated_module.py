@@ -1,25 +1,69 @@
 # -*- coding: utf-8 -*-
 
-# from module_human_written import Profile, User
-from module_generated import Profile, User
+# from module_generated import (
+from module_human_written import (
+    SimpleModel,
+    SimpleModelWithSubscript,
+    SimpleModelWithNestedSubscript,
+    SimpleContainer,
+    # Profile,
+    # User,
+)
 
-user_data = {
-    "user_id": 1,
-    "profile": {
-        "firstname": "John",
-        "lastname": "Doe",
-        "status": "active",
-    },
-    "tags": {"role": "admin"},
-}
-user = User.new(user_data)
 
-print(f"{user.user_id = }")
-print(f"{user.profile = }")
-print(f"{user.labels = }")
-print(f"{user.tags = }")
+def test_simple_model():
+    data = {
+        "attr1": "hello",
+    }
+    model = SimpleModel.make_one(data)
+    print(f"{model.attr1 = }")
 
-print(f"{user.profile.firstname = }")
-print(f"{user.profile.lastname = }")
-print(f"{user.profile.phone_number = }")
-print(f"{user.profile.status = }")
+    data = {
+        "attr1": "hello",
+        "attr3": ["a", "b", "c"],
+    }
+    model = SimpleModelWithSubscript.make_one(data)
+    print(f"{model.attr1 = }")
+    # print(f"{model.attr2 = }")
+    print(f"{model.attr3 = }")
+
+    data = {
+        "attr1": ["a", "b", "c"],
+    }
+    model = SimpleModelWithNestedSubscript.make_one(data)
+    print(f"{model.attr1 = }")
+    # print(f"{model.attr2 = }")
+
+
+# test_simple_model()
+
+
+def test_simple_container():
+    data = {
+        "attr1": {
+            "attr1": "value1",
+        },
+        "attr2": None,
+        "attr3": {
+            "attr1": "value3",
+        },
+        "attr5": None,
+        "attr7": [
+            {"attr1": "list_value1"},
+            {"attr1": "list_value2"},
+        ],
+    }
+    model = SimpleContainer.make_one(data)
+    print(f"{model.attr1 = }")
+    print(f"{model.attr2 = }")
+    print(f"{model.attr3 = }")
+    # print(f"{model.attr4 = }")
+    print(f"{model.attr5 = }")
+    # print(f"{model.attr6 = }")
+    print(f"{model.attr7 = }")
+    # print(f"{model.attr8 = }")
+
+    _ = model.attr7[0].attr1  # type hint works
+
+
+test_simple_container()
