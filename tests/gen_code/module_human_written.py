@@ -17,14 +17,14 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleModel(Base["type_defs.SimpleModel"]):
+class SimpleModel(Base["type_defs.SimpleModelTypeDef"]):
     @cached_property
     def attr1(self):
         return self._data["attr1"]
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleModelWithSubscript(Base["type_defs.SimpleModelWithSubscript"]):
+class SimpleModelWithSubscript(Base["type_defs.SimpleModelWithSubscriptTypeDef"]):
     @cached_property
     def attr1(self):
         return self._data["attr1"]
@@ -39,7 +39,7 @@ class SimpleModelWithSubscript(Base["type_defs.SimpleModelWithSubscript"]):
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleModelWithNestedSubscript(Base["type_defs.SimpleModelWithNestedSubscript"]):
+class SimpleModelWithNestedSubscript(Base["type_defs.SimpleModelWithNestedSubscriptTypeDef"]):
     @cached_property
     def attr1(self):
         return self._data["attr1"]
@@ -50,7 +50,7 @@ class SimpleModelWithNestedSubscript(Base["type_defs.SimpleModelWithNestedSubscr
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleContainer(Base["type_defs.SimpleContainer"]):
+class SimpleContainer(Base["type_defs.SimpleContainerTypeDef"]):
     @cached_property
     def attr1(self):
         return SimpleModel.make_one(self._data["attr1"])
@@ -84,14 +84,14 @@ class SimpleContainer(Base["type_defs.SimpleContainer"]):
         return [SimpleModel.make_one(data) for data in self._data["attr8"]]
 
 
-# class SimpleContainer(TypedDict):
-#     attr1: SimpleModel
-#     attr2: Optional[SimpleModel]
-#     attr3: Required[SimpleModel]
-#     attr4: NotRequired[SimpleModel]
-#     attr5: Required[Optional[SimpleModel]]
-#     attr6: Required[List[SimpleModel]]
-#     attr7: NotRequired[List[SimpleModel]]
+# class SimpleContainerTypeDef(TypedDict):
+#     attr1: SimpleModelTypeDef
+#     attr2: Optional[SimpleModelTypeDef]
+#     attr3: Required[SimpleModelTypeDef]
+#     attr4: NotRequired[SimpleModelTypeDef]
+#     attr5: Required[Optional[SimpleModelTypeDef]]
+#     attr6: Required[List[SimpleModelTypeDef]]
+#     attr7: NotRequired[List[SimpleModelTypeDef]]
 
 # @dataclasses.dataclass(frozen=True)
 # class Profile(Base["type_defs.ProfileTypeDef"]):
