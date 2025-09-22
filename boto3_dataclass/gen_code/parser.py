@@ -151,7 +151,15 @@ class TypedDictFieldParser:
         elif subscriptor == "List":
             # print(f'Enter `if subscriptor == "List":` branch')
             self.handle_list_subscript(annotation)
-        elif subscriptor in ["Dict", "Set", "Tuple"]:
+        elif subscriptor in [
+            "Dict",
+            "Set",
+            "Tuple",
+            "Mapping",
+            "Sequence",
+            "Literal",
+            "EventStream",
+        ]:
             # print(f'Enter `elif subscriptor in ["Dict", "Set", "Tuple"]:` branch')
             pass
         else:

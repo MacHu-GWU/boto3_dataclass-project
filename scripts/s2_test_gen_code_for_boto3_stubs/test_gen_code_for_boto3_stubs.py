@@ -4,7 +4,8 @@ from pathlib import Path
 from boto3_dataclass.gen_code.stub_file import Boto3Stubs
 from boto3_dataclass.gen_code.parser import Parser
 
-service = "lambda"
+# service = "lambda"
+service = "bedrock_runtime"
 boto3_stubs = Boto3Stubs(service=service)
 path_stub_file = boto3_stubs.path_type_def_stub_file
 print(path_stub_file)
