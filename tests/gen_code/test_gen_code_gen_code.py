@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from boto3_dataclass.tests.gen_code.typed_dict_def_mapping import (
-    path_generated_module,
-    tddm,
-)
+from boto3_dataclass.tests.gen_code.typed_dict_def_mapping import tddm
+from boto3_dataclass.paths import dir_unit_test
+
+path_generated_module = dir_unit_test / "gen_code" / f"module_generated.py"
 
 
 class TestTypedDictDefMapping:

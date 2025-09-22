@@ -4,10 +4,10 @@ from typing import TYPE_CHECKING, List, Dict
 import dataclasses
 from functools import cached_property
 
-from base import Base
+from boto3_dataclass.base import Base
 
 if TYPE_CHECKING:  # pragma: no cover
-    import type_defs
+    {{ type_defs_line }}
 
 {% for tdd in tddm.defs %}
 {{ tdd.gen_code() }}
