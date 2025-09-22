@@ -13,7 +13,7 @@ class ProfileTypeDef(TypedDict):
 
 
 class UserTypeDef(TypedDict):
-    user_id: Required[str]
+    user_id: Required[int]
     profile: Required[ProfileTypeDef]
-    labels: List[str]
+    labels: NotRequired[List[str]]
     tags: Dict[str, str]
