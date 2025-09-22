@@ -10,44 +10,30 @@ from boto3_dataclass.gen_code.gen_code import (
 dir_here = Path(__file__).absolute().parent
 path_code = dir_here / f"generated_code.py"
 
-mapping = {
-    "ProfileTypeDef": TypedDictDef(
+defs = [
+    TypedDictDef(
         name="ProfileTypeDef",
-        fields={
-            "firstname": TypedDictField(
-                name="firstname",
-            ),
-            "lastname": TypedDictField(
-                name="lastname",
-            ),
-            "phone_number": TypedDictField(
-                name="phone_number",
-            ),
-            "status": TypedDictField(
-                name="status",
-            ),
-        },
+        fields=[
+            TypedDictField(name="firstname"),
+            TypedDictField(name="lastname"),
+            TypedDictField(name="phone_number"),
+            TypedDictField(name="status"),
+        ],
     ),
-    "UserTypeDef": TypedDictDef(
+    TypedDictDef(
         name="UserTypeDef",
-        fields={
-            "user_id": TypedDictField(
-                name="user_id",
-            ),
-            "profile": TypedDictField(
+        fields=[
+            TypedDictField(name="user_id"),
+            TypedDictField(
                 name="profile",
                 is_nested_typed_dict=True,
                 nested_type_name="ProfileTypeDef",
             ),
-            "labels": TypedDictField(
-                name="labels",
-            ),
-            "tags": TypedDictField(
-                name="tags",
-            ),
-        },
+            TypedDictField(name="labels"),
+            TypedDictField(name="tags"),
+        ],
     ),
-}
-typed_dict_def_mapping = TypedDictDefMapping(mapping=mapping)
-s = typed_dict_def_mapping.gen_code()
+]
+tddm = TypedDictDefMapping(defs=defs)
+s = tddm.gen_code()
 path_code.write_text(s, encoding="utf-8")

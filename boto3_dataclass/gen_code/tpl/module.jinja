@@ -9,6 +9,6 @@ from base import Base
 if TYPE_CHECKING:  # pragma: no cover
     import type_defs
 
-{% for tdd in tddm.mapping.values() %}
+{% for tdd in tddm.defs %}
 {{ tdd.gen_code() }}
 {% endfor %}

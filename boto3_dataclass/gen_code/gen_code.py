@@ -23,7 +23,11 @@ class TypedDictField:
 @dataclasses.dataclass
 class TypedDictDef:
     name: str = dataclasses.field()
-    fields: dict[str, TypedDictField] = dataclasses.field(default_factory=dict)
+    fields: list["TypedDictField"] = dataclasses.field(default_factory=dict)
+
+    @cached_property
+    def fields_mapping(self) -> dict[str, "TypedDictField"]:
+        return {td.name: td for td in self.fields}
 
     @property
     def model_name(self) -> str:
@@ -35,7 +39,11 @@ class TypedDictDef:
 
 @dataclasses.dataclass
 class TypedDictDefMapping:
-    mapping: dict[str, TypedDictDef] = dataclasses.field(default_factory=dict)
+    defs: list["TypedDictDef"] = dataclasses.field(default_factory=list)
+
+    @cached_property
+    def defs_mapping(self) -> dict[str, "TypedDictDef"]:
+        return {tdd.name: tdd for tdd in self.defs}
 
     def gen_code(self) -> str:
         return tpl_enum.module.render(tddm=self)

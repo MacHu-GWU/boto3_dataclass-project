@@ -1,5 +1,5 @@
 @dataclasses.dataclass(frozen=True)
 class {{ td.model_name }}(Base["type_defs.{{ td.name }}"]):
-{%- for tdf in td.fields.values() %}
+{%- for tdf in td.fields %}
 {{ tdf.gen_code() }}
 {% endfor %}
