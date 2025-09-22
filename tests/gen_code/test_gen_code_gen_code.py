@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-# from boto3_dataclass.gen_code.gen_code import api
-
 from boto3_dataclass.tests.gen_code.typed_dict_def_mapping import (
     path_generated_module,
     tddm,
@@ -10,7 +8,9 @@ from boto3_dataclass.tests.gen_code.typed_dict_def_mapping import (
 
 class TestTypedDictDefMapping:
     def test_gen_code(self):
-        code = tddm.gen_code()
+        code = tddm.gen_code(
+            type_defs_line="from boto3_dataclass.tests.gen_code import type_defs",
+        )
         path_generated_module.write_text(code)
 
 

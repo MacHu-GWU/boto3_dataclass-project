@@ -45,5 +45,12 @@ class TypedDictDefMapping:
     def defs_mapping(self) -> dict[str, "TypedDictDef"]:
         return {tdd.name: tdd for tdd in self.defs}
 
-    def gen_code(self) -> str:
-        return tpl_enum.module.render(tddm=self)
+    def gen_code(
+        self,
+        type_defs_line: str
+    ) -> str:
+        """
+        :param type_defs_line: The line to import the type definitions module.
+            Example: ``"from boto3_dataclass.tests.gen_code import type_defs"``
+        """
+        return tpl_enum.module.render(tddm=self, type_defs_line=type_defs_line)
