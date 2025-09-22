@@ -23,6 +23,7 @@ class SimpleContainerTypeDef(TypedDict):
     attr4: NotRequired[SimpleModelTypeDef]
     attr5: Required[Optional[SimpleModelTypeDef]]
     attr6: NotRequired[Optional[SimpleModelTypeDef]]
+    # 注: 我们没测 Optional[List[SimpleModelTypeDef]] 是因为它不合理
     attr7: List[SimpleModelTypeDef]
     attr8: Required[List[SimpleModelTypeDef]]
     attr9: NotRequired[List[SimpleModelTypeDef]]
