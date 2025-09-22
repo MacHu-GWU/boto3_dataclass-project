@@ -1,0 +1,7 @@
+    @cached_property
+    def {{ tdf.name }}(self):
+        {%- if tdf.is_nested_typed_dict %}
+        return {{ tdf.nested_modeL_name }}.new(self._data.get("{{ tdf.name }}"))
+        {%- else %}
+        return self._data.get("{{ tdf.name }}")
+        {%- endif %}

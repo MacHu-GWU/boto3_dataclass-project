@@ -16,8 +16,16 @@ def load_template(name: str) -> jinja2.Template:
 
 class TplEnum:
     @cached_property
-    def path(self) -> jinja2.Template:
-        return load_template("abc.md")
+    def typed_dict_field(self) -> jinja2.Template:
+        return load_template("typed_dict_field.jinja")
+
+    @cached_property
+    def typed_dict_def(self) -> jinja2.Template:
+        return load_template("typed_dict_def.jinja")
+
+    @cached_property
+    def module(self) -> jinja2.Template:
+        return load_template("module.jinja")
 
 
 tpl_enum = TplEnum()
