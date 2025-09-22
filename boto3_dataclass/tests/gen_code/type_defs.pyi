@@ -4,27 +4,27 @@ from typing import TypedDict, Required, NotRequired, Optional, Dict, List
 
 from iterals import ProfileStatusType
 
-class SimpleModel(TypedDict):
+class SimpleModelTypeDef(TypedDict):
     attr1: str
 
-class SimpleModelWithSubscript(TypedDict):
+class SimpleModelWithSubscriptTypeDef(TypedDict):
     attr1: Required[str]
     attr2: NotRequired[str]
     attr3: List[str]
 
-class SimpleModelWithNestedSubscript(TypedDict):
+class SimpleModelWithNestedSubscriptTypeDef(TypedDict):
     attr1: Required[List[str]]
     attr2: NotRequired[List[str]]
 
-class SimpleContainer(TypedDict):
-    attr1: SimpleModel
-    attr2: Optional[SimpleModel]
-    attr3: Required[SimpleModel]
-    attr4: NotRequired[SimpleModel]
-    attr5: Required[Optional[SimpleModel]]
-    attr6: NotRequired[Optional[SimpleModel]]
-    attr7: Required[List[SimpleModel]]
-    attr8: NotRequired[List[SimpleModel]]
+class SimpleContainerTypeDef(TypedDict):
+    attr1: SimpleModelTypeDef
+    attr2: Optional[SimpleModelTypeDef]
+    attr3: Required[SimpleModelTypeDef]
+    attr4: NotRequired[SimpleModelTypeDef]
+    attr5: Required[Optional[SimpleModelTypeDef]]
+    attr6: NotRequired[Optional[SimpleModelTypeDef]]
+    attr7: Required[List[SimpleModelTypeDef]]
+    attr8: NotRequired[List[SimpleModelTypeDef]]
 
 # class ProfileTypeDef(TypedDict):
 #     firstname: str
