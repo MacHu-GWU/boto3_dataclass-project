@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-# from module_generated import (
-from module_human_written import (
+from module_generated import (
+# from module_human_written import (
     SimpleModel,
     SimpleModelWithSubscript,
     SimpleModelWithNestedSubscript,

@@ -1,5 +1,7 @@
 @dataclasses.dataclass(frozen=True)
-class {{ td.model_name }}(Base["type_defs.{{ td.name }}"]):
+class {{ td.model_name }}:
+    boto3_raw_data: "type_defs.{{ td.name }}" = dataclasses.field()
+{{ "" }}
 {%- for tdf in td.fields %}
 {{ tdf.gen_code() }}
 {% endfor %}

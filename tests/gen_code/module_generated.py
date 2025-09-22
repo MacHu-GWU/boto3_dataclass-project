@@ -1,79 +1,85 @@
 # -*- coding: utf-8 -*-
 
-from typing import TYPE_CHECKING, List, Dict
+import typing as T
 import dataclasses
 from functools import cached_property
 
-from boto3_dataclass.base import Base
-
-if TYPE_CHECKING:  # pragma: no cover
+if T.TYPE_CHECKING:  # pragma: no cover
     from boto3_dataclass.tests.gen_code import type_defs
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleModel(Base["type_defs.SimpleModelTypeDef"]):
+class SimpleModel:
+    boto3_raw_data: "type_defs.SimpleModelTypeDef" = dataclasses.field()
+
     @cached_property
-    def attr1(self):
-        return self._data["attr1"]
+    def attr1(self):  # pragma: no cover
+        return self.boto3_raw_data["attr1"]
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleModelWithSubscript(Base["type_defs.SimpleModelWithSubscriptTypeDef"]):
-    @cached_property
-    def attr1(self):
-        return self._data["attr1"]
+class SimpleModelWithSubscript:
+    boto3_raw_data: "type_defs.SimpleModelWithSubscriptTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr2(self):
-        return self._data["attr2"]
+    def attr1(self):  # pragma: no cover
+        return self.boto3_raw_data["attr1"]
 
     @cached_property
-    def attr3(self):
-        return self._data["attr3"]
+    def attr2(self):  # pragma: no cover
+        return self.boto3_raw_data["attr2"]
+
+    @cached_property
+    def attr3(self):  # pragma: no cover
+        return self.boto3_raw_data["attr3"]
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleModelWithNestedSubscript(Base["type_defs.SimpleModelWithNestedSubscriptTypeDef"]):
-    @cached_property
-    def attr1(self):
-        return self._data["attr1"]
+class SimpleModelWithNestedSubscript:
+    boto3_raw_data: "type_defs.SimpleModelWithNestedSubscriptTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr2(self):
-        return self._data["attr2"]
+    def attr1(self):  # pragma: no cover
+        return self.boto3_raw_data["attr1"]
+
+    @cached_property
+    def attr2(self):  # pragma: no cover
+        return self.boto3_raw_data["attr2"]
 
 
 @dataclasses.dataclass(frozen=True)
-class SimpleContainer(Base["type_defs.SimpleContainerTypeDef"]):
-    @cached_property
-    def attr1(self):
-        return SimpleModel.make_one(self._data["attr1"])
+class SimpleContainer:
+    boto3_raw_data: "type_defs.SimpleContainerTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr2(self):
-        return SimpleModel.make_one(self._data["attr2"])
+    def attr1(self):  # pragma: no cover
+        return SimpleModel(self.boto3_raw_data["attr1"])
 
     @cached_property
-    def attr3(self):
-        return SimpleModel.make_one(self._data["attr3"])
+    def attr2(self):  # pragma: no cover
+        return SimpleModel(self.boto3_raw_data["attr2"])
 
     @cached_property
-    def attr4(self):
-        return SimpleModel.make_one(self._data["attr4"])
+    def attr3(self):  # pragma: no cover
+        return SimpleModel(self.boto3_raw_data["attr3"])
 
     @cached_property
-    def attr5(self):
-        return SimpleModel.make_one(self._data["attr5"])
+    def attr4(self):  # pragma: no cover
+        return SimpleModel(self.boto3_raw_data["attr4"])
 
     @cached_property
-    def attr6(self):
-        return SimpleModel.make_one(self._data["attr6"])
+    def attr5(self):  # pragma: no cover
+        return SimpleModel(self.boto3_raw_data["attr5"])
 
     @cached_property
-    def attr7(self):
-        return [SimpleModel.make_one(dct) for dct in self._data["attr7"]]
+    def attr6(self):  # pragma: no cover
+        return SimpleModel(self.boto3_raw_data["attr6"])
 
     @cached_property
-    def attr8(self):
-        return [SimpleModel.make_one(dct) for dct in self._data["attr8"]]
+    def attr7(self):  # pragma: no cover
+        return [SimpleModel(dct) for dct in self.boto3_raw_data["attr7"]]
+
+    @cached_property
+    def attr8(self):  # pragma: no cover
+        return [SimpleModel(dct) for dct in self.boto3_raw_data["attr8"]]
 
