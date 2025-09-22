@@ -1,7 +1,11 @@
     @cached_property
     def {{ tdf.name }}(self):
         {%- if tdf.is_nested_typed_dict %}
-        return {{ tdf.nested_modeL_name }}.new(self._data.get("{{ tdf.name }}"))
+            {%- if tdf.nested_type_subscriptor == 'List' %}
+        return [{{ tdf.nested_modeL_name }}.make_one(dct) for dct in self._data["{{ tdf.name }}"]]
+            {%- else %}
+        return {{ tdf.nested_modeL_name }}.make_one(self._data["{{ tdf.name }}"])
+            {%- endif %}
         {%- else %}
-        return self._data.get("{{ tdf.name }}")
+        return self._data["{{ tdf.name }}"]
         {%- endif %}

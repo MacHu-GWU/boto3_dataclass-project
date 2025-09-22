@@ -1,16 +1,26 @@
 # -*- coding: utf-8 -*-
 
+import typing as T
 import dataclasses
 from functools import cached_property
 
 from .template import tpl_enum
 
+# todo: 目前只用到了 List 一个, 其他几个到底有没有用还有待观察
+SubscriptorType = T.Literal[
+    "NULL",
+    "Required",
+    "NotRequired",
+    "Optional",
+    "List",
+]
 
 @dataclasses.dataclass
 class TypedDictField:
     name: str = dataclasses.field()
     is_nested_typed_dict: bool = dataclasses.field(default=False)
     nested_type_name: str | None = dataclasses.field(default=None)
+    nested_type_subscriptor: SubscriptorType = dataclasses.field(default="NULL")
 
     @property
     def nested_modeL_name(self) -> str:

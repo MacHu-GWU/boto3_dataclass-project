@@ -63,7 +63,8 @@ def test_simple_container():
     print(f"{model.attr7 = }")
     # print(f"{model.attr8 = }")
 
-    _ = model.attr7[0].attr1  # type hint works
+    # _ = model.attr7[0].attr1  # type hint works
+    # _ = model.attr8[0].attr1  # type hint works
 
 
 test_simple_container()

@@ -11,39 +11,69 @@ if TYPE_CHECKING:  # pragma: no cover
 
 
 @dataclasses.dataclass(frozen=True)
-class Profile(Base["type_defs.ProfileTypeDef"]):
+class SimpleModel(Base["type_defs.SimpleModelTypeDef"]):
     @cached_property
-    def firstname(self):
-        return self._data.get("firstname")
-
-    @cached_property
-    def lastname(self):
-        return self._data.get("lastname")
-
-    @cached_property
-    def phone_number(self):
-        return self._data.get("phone_number")
-
-    @cached_property
-    def status(self):
-        return self._data.get("status")
+    def attr1(self):
+        return self._data["attr1"]
 
 
 @dataclasses.dataclass(frozen=True)
-class User(Base["type_defs.UserTypeDef"]):
+class SimpleModelWithSubscript(Base["type_defs.SimpleModelWithSubscriptTypeDef"]):
     @cached_property
-    def user_id(self):
-        return self._data.get("user_id")
+    def attr1(self):
+        return self._data["attr1"]
 
     @cached_property
-    def profile(self):
-        return Profile.new(self._data.get("profile"))
+    def attr2(self):
+        return self._data["attr2"]
 
     @cached_property
-    def labels(self):
-        return self._data.get("labels")
+    def attr3(self):
+        return self._data["attr3"]
+
+
+@dataclasses.dataclass(frozen=True)
+class SimpleModelWithNestedSubscript(Base["type_defs.SimpleModelWithNestedSubscriptTypeDef"]):
+    @cached_property
+    def attr1(self):
+        return self._data["attr1"]
 
     @cached_property
-    def tags(self):
-        return self._data.get("tags")
+    def attr2(self):
+        return self._data["attr2"]
+
+
+@dataclasses.dataclass(frozen=True)
+class SimpleContainer(Base["type_defs.SimpleContainerTypeDef"]):
+    @cached_property
+    def attr1(self):
+        return SimpleModel.make_one(self._data["attr1"])
+
+    @cached_property
+    def attr2(self):
+        return SimpleModel.make_one(self._data["attr2"])
+
+    @cached_property
+    def attr3(self):
+        return SimpleModel.make_one(self._data["attr3"])
+
+    @cached_property
+    def attr4(self):
+        return SimpleModel.make_one(self._data["attr4"])
+
+    @cached_property
+    def attr5(self):
+        return SimpleModel.make_one(self._data["attr5"])
+
+    @cached_property
+    def attr6(self):
+        return SimpleModel.make_one(self._data["attr6"])
+
+    @cached_property
+    def attr7(self):
+        return [SimpleModel.make_one(dct) for dct in self._data["attr7"]]
+
+    @cached_property
+    def attr8(self):
+        return [SimpleModel.make_one(dct) for dct in self._data["attr8"]]
 
