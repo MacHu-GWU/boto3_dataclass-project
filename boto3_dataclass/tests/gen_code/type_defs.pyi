@@ -23,8 +23,9 @@ class SimpleContainerTypeDef(TypedDict):
     attr4: NotRequired[SimpleModelTypeDef]
     attr5: Required[Optional[SimpleModelTypeDef]]
     attr6: NotRequired[Optional[SimpleModelTypeDef]]
-    attr7: Required[List[SimpleModelTypeDef]]
-    attr8: NotRequired[List[SimpleModelTypeDef]]
+    attr7: List[SimpleModelTypeDef]
+    attr8: Required[List[SimpleModelTypeDef]]
+    attr9: NotRequired[List[SimpleModelTypeDef]]
 
 # class ProfileTypeDef(TypedDict):
 #     firstname: str

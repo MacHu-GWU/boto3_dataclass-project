@@ -6,8 +6,6 @@ from module_human_written import (
     SimpleModelWithSubscript,
     SimpleModelWithNestedSubscript,
     SimpleContainer,
-    # Profile,
-    # User,
 )
 
 
@@ -15,14 +13,14 @@ def test_simple_model():
     data = {
         "attr1": "hello",
     }
-    model = SimpleModel.make_one(data)
+    model = SimpleModel(data)
     print(f"{model.attr1 = }")
 
     data = {
         "attr1": "hello",
         "attr3": ["a", "b", "c"],
     }
-    model = SimpleModelWithSubscript.make_one(data)
+    model = SimpleModelWithSubscript(data)
     print(f"{model.attr1 = }")
     # print(f"{model.attr2 = }")
     print(f"{model.attr3 = }")
@@ -30,7 +28,7 @@ def test_simple_model():
     data = {
         "attr1": ["a", "b", "c"],
     }
-    model = SimpleModelWithNestedSubscript.make_one(data)
+    model = SimpleModelWithNestedSubscript(data)
     print(f"{model.attr1 = }")
     # print(f"{model.attr2 = }")
 
@@ -53,7 +51,7 @@ def test_simple_container():
             {"attr1": "list_value2"},
         ],
     }
-    model = SimpleContainer.make_one(data)
+    model = SimpleContainer(data)
     print(f"{model.attr1 = }")
     print(f"{model.attr2 = }")
     print(f"{model.attr3 = }")
