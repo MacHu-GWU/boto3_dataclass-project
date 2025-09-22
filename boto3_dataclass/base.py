@@ -15,7 +15,7 @@ class Base(Generic[T_MODEL]):
     _data: T_MODEL = dataclasses.field()
 
     @classmethod
-    def new(cls, data: T_MODEL) -> Self:
+    def new(cls, data: T_MODEL):
         return cls(_data=data)
 
     @property
@@ -25,13 +25,19 @@ class Base(Generic[T_MODEL]):
 
 if __name__ == "__main__":
     from typing import TypedDict
+    from functools import cached_property
 
     class UserModel(TypedDict):
         special_user_attr: int
 
     @dataclasses.dataclass(frozen=True)
     class User(Base["UserModel"]):
-        pass
+        @cached_property
+        def special_user_attr(self):
+            return self._data["special_user_attr"]
 
     user = User.new({"special_user_attr": 123})
-    _ = user.raw_data
+
+    print(f"{user.raw_data = }")
+    print(f"{user.special_user_attr = }")
+
