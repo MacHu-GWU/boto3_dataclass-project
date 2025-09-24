@@ -13,6 +13,7 @@ def compare_code(
     code: str,
     expected: str,
     dedent: bool = True,
+    debug: bool = False,
 ) -> bool:
     """
     Compares whether two pieces of code are identical, ignoring whitespace and indentation.
@@ -22,4 +23,11 @@ def compare_code(
 
     :return: Returns True if the two code strings are identical after ignoring whitespace and indentation; otherwise, returns False.
     """
-    return normalize_code(code, dedent) == normalize_code(expected, dedent)
+    s1 = normalize_code(code, dedent)
+    s2 = normalize_code(expected, dedent)
+    if debug:
+        print(f"--- code ---")
+        print(s1)
+        print(f"--- expected ---")
+        print(s2)
+    return s1 == s2

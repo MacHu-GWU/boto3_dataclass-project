@@ -87,7 +87,7 @@ class TypedDictField:
         """
         生成字段的代码字符串.
         """
-        return tpl_enum.typed_dict_field.render(tdf=self)
+        return tpl_enum.boto3_dataclass_service__typed_dict_field.render(tdf=self)
 
 
 @dataclasses.dataclass
@@ -124,7 +124,7 @@ class TypedDictDef:
         """
         生成 TypedDict 的代码字符串.
         """
-        return tpl_enum.typed_dict_def.render(td=self)
+        return tpl_enum.boto3_dataclass_service__typed_dict_def.render(td=self)
 
 
 @dataclasses.dataclass
