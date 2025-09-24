@@ -1,0 +1,3 @@
+- type_defs.py.jinja: Template for the dataclass definition code in ``boto3_dataclass_{service}.type_defs.py`` file.
+    - typed_dict.jinja: Template for the dataclass definition.
+    - typed_dict_field.jinja: Template for the per dataclass field definition.
