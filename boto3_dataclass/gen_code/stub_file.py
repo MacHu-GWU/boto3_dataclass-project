@@ -112,7 +112,7 @@ class Boto3Stubs:
         return self.dir_code / "type_defs.py"
 
     def gen_code(self) -> str:
-        tddm_parser = TypedDictDefMappingParser(path_stub_file=self.path_code_type_defs)
+        tddm_parser = TypedDictDefMappingParser(path_stub_file=self.path_type_def_stub_file)
         tddm = tddm_parser.parse()
         code = tddm.gen_code(
             type_defs_line=f"from mypy_boto3_{self.service} import type_defs",
