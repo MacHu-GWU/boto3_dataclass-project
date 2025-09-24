@@ -15,7 +15,7 @@ from functools import cached_property
 
 try:
     from rich import print as rprint
-except ImportError: # pragma: no cover
+except ImportError:  # pragma: no cover
     pass
 
 from ..constants import TYPE_DEF, TYPED_DICT
@@ -26,6 +26,9 @@ from .gen_code import (
     TypedDictDef,
     TypedDictDefMapping,
 )
+
+DEBUG = True
+# DEBUG = False
 
 
 def parse_ast(path: Path) -> ast.Module:
@@ -150,8 +153,9 @@ class TypedDictDefMappingParser:
         """
         target: ast.Name = node_ass.targets[0]
         name = target.id
-        lineno = str(target.lineno).zfill(self.zfill)
-        print(f"{lineno} {name} = TypedDict(...) # <--- parse this")
+        if DEBUG:
+            lineno = str(target.lineno).zfill(self.zfill)
+            print(f"{lineno} {name} = TypedDict(...) # <--- parse this") # for debug only
         call: ast.Call = node_ass.value
         # ``kwargs`` is this part
         # {
@@ -163,11 +167,12 @@ class TypedDictDefMappingParser:
         # For example, in ``"id": int``,
         # ``key`` is the "id" part, ``value`` is the str part
         for key, value in zip(kwargs.keys, kwargs.values):
-            key_text = ast.get_source_segment(self.stub_file_content, key)
-            value_text = ast.get_source_segment(self.stub_file_content, value)
-            text = f"{key_text}: {value_text},"
-            lineno = str(key.lineno).zfill(self.zfill)
-            print(f"{lineno}    {text} # <--- parse this")
+            if DEBUG:
+                key_text = ast.get_source_segment(self.stub_file_content, key)
+                value_text = ast.get_source_segment(self.stub_file_content, value)
+                text = f"{key_text}: {value_text},"
+                lineno = str(key.lineno).zfill(self.zfill)
+                print(f"{lineno}    {text} # <--- parse this") # for debug only
             tdfa_parser = TypedDictFieldAnnotationParser(annotation=value)
             tdfa = tdfa_parser.parse()
             tdf = TypedDictField(
@@ -197,14 +202,16 @@ class TypedDictDefMappingParser:
                 name: str
         """
         name = node_td.name
-        lineno = str(node_td.lineno).zfill(self.zfill)
-        print(f"{lineno} class {name}: # <--- parse this")
+        if DEBUG:
+            lineno = str(node_td.lineno).zfill(self.zfill)
+            print(f"{lineno} class {name}: # <--- parse this")# for debug only
         fields = []
         for i, node in enumerate(node_td.body, start=1):
             if isinstance(node, ast.AnnAssign):
-                text = ast.get_source_segment(self.stub_file_content, node)
-                lineno = str(node.lineno).zfill(self.zfill)
-                print(f"{lineno}    {text} # <--- parse this")
+                if DEBUG:
+                    text = ast.get_source_segment(self.stub_file_content, node)
+                    lineno = str(node.lineno).zfill(self.zfill)
+                    print(f"{lineno}    {text} # <--- parse this")# for debug only
                 typed_dict_field = self.parse_typed_dict_ann_assign(node)
                 fields.append(typed_dict_field)
                 # break
@@ -317,8 +324,10 @@ class TypedDictFieldAnnotationParser:
             self.handle_subscript(annotation.slice)
         elif isinstance(annotation.slice, ast.Name):
             self.handle_name(annotation.slice)
+        elif isinstance(annotation.slice, (ast.BinOp)):
+            pass
         else:
-            raise NotImplementedError(f"Unhandled slice: {annotation}")
+            raise NotImplementedError(f"Unhandled slice: {annotation.slice}")
 
     def handle_required_not_required_subscript(self, annotation: ast.Subscript):
         self.handle_simple_subscript(annotation)
