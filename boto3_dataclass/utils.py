@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import textwrap
+from pathlib import Path
 
 
 def normalize_code(s: str, dedent: bool = True) -> str:
@@ -31,3 +32,14 @@ def compare_code(
         print(f"--- expected ---")
         print(s2)
     return s1 == s2
+
+
+def write(path: Path, content: str):
+    """
+    Write content to a file, creating parent directories if they do not exist.
+    """
+    try:
+        path.write_text(content, encoding="utf-8")
+    except FileNotFoundError:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(content, encoding="utf-8")

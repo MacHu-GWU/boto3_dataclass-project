@@ -5,18 +5,8 @@ from pathlib import Path
 from functools import cached_property
 
 from ..paths import path_enum
+from ..utils import write
 from ..templates.template_enum import tpl_enum
-
-
-def write(path: Path, content: str):
-    """
-    Write content to a file, creating parent directories if they do not exist.
-    """
-    try:
-        path.write_text(content, encoding="utf-8")
-    except FileNotFoundError:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(content, encoding="utf-8")
 
 
 @dataclasses.dataclass
@@ -24,6 +14,7 @@ class Package:
     """
     Represents a generated boto3 dataclass package for a specific AWS service and version.
     """
+
     service: str
     version: str
 
