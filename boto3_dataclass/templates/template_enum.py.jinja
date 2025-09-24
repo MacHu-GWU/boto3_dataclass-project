@@ -1,0 +1,20 @@
+# -*- coding: utf-8 -*-
+
+"""
+This module provides utilities for access Jinja2 templates used in code generation.
+It defines the :class:`TemplateEnum` class, which exposes cached properties for accessing templates.
+"""
+
+from functools import cached_property
+
+from .template_helpers import load_template
+
+
+class TemplateEnum:
+    {%- for template_metadata in template_metadata_list %}
+    @cached_property
+    def {{template_metadata.name }}(self):
+        return load_template("{{ template_metadata.relpath }}")
+    {% endfor %}
+
+tpl_enum = TemplateEnum()

@@ -1,0 +1,18 @@
+@dataclasses.dataclass(frozen=True)
+class {{ td.model_name }}:
+    boto3_raw_data: "type_defs.{{ td.name }}" = dataclasses.field()
+{{ "" }}
+{%- for tdf in td.fields %}
+{{ tdf.gen_code() }}
+{% endfor %}
+    @classmethod
+    def make_one(cls, boto3_raw_data: T.Optional["type_defs.{{ td.name }}"]):
+        if boto3_raw_data is None:
+            return None
+        return cls(boto3_raw_data=boto3_raw_data)
+
+    @classmethod
+    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.{{ td.name }}"]]):
+        if boto3_raw_data_list is None:
+            return None
+        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
