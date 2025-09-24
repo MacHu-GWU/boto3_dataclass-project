@@ -2,6 +2,11 @@
 
 """
 我最终的决定是, 不要用泛型等任何基类等复杂的设计, 直接每个类都不用继承. 直接用最简单的 Frozen Class.
+给每个类都实现这些代码:
+
+- boto3_raw_data: "UserTypeDef" = dataclasses.field()
+- make_one
+- make_many
 """
 
 import typing as T

@@ -15,23 +15,23 @@ def test_simple_model():
         "attr1": "hello",
     }
     model = SimpleModel(data)
-    print(f"{model.attr1 = }")
+    print(f"{model.attr1 = }")  # type hint works
 
     data = {
         "attr1": "hello",
         "attr3": ["a", "b", "c"],
     }
     model = SimpleModelWithSubscript(data)
-    print(f"{model.attr1 = }")
-    # print(f"{model.attr2 = }")
-    print(f"{model.attr3 = }")
+    print(f"{model.attr1 = }")  # type hint works
+    # print(f"{model.attr2 = }") # type hint works
+    print(f"{model.attr3 = }")  # type hint works
 
     data = {
         "attr1": ["a", "b", "c"],
     }
     model = SimpleModelWithNestedSubscript(data)
-    print(f"{model.attr1 = }")
-    # print(f"{model.attr2 = }")
+    print(f"{model.attr1 = }")  # type hint works
+    # print(f"{model.attr2 = }") # type hint works
 
 
 # test_simple_model()
@@ -51,6 +51,10 @@ def test_simple_container():
             {"attr1": "list_value1"},
             {"attr1": "list_value2"},
         ],
+        "attr8": [
+            {"attr1": "list_value1"},
+            {"attr1": "list_value2"},
+        ],
     }
     model = SimpleContainer(data)
     print(f"{model.attr1 = }")
@@ -60,10 +64,12 @@ def test_simple_container():
     print(f"{model.attr5 = }")
     # print(f"{model.attr6 = }")
     print(f"{model.attr7 = }")
-    # print(f"{model.attr8 = }")
+    print(f"{model.attr8 = }")
+    # print(f"{model.attr9 = }")
 
-    # _ = model.attr7[0].attr1  # type hint works
-    # _ = model.attr8[0].attr1  # type hint works
+    print(f"{model.attr7[0].attr1 = }")  # type hint works
+    # print(f"{model.attr8[0].attr1 = }")  # type hint works
+    # print(f"{model.attr9[0].attr1 = }")  # type hint works
 
 
 test_simple_container()

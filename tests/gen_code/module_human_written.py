@@ -4,6 +4,7 @@
 - 不要对 NotRequired 和 Required 进行特殊处理, 不要用 get() 方法获得 None, 它跟
     Optional 的含义是不同的. 如果尝试获得一个 NotRequired 的属性, 那么就该抛出 KeyError 异常.
 - 对于 Optional, 因为说明这个 field 必须存在, 但是值可以是 None, 所以直接访问即可.
+- 对于 List 使用 make_many 方法, 对于单个使用 make_one 方法.
 """
 
 import typing as T
@@ -19,78 +20,181 @@ class SimpleModel:
     boto3_raw_data: "type_defs.SimpleModelTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr1(self):
+    def attr1(self):  # pragma: no cover
         return self.boto3_raw_data["attr1"]
 
+    @classmethod
+    def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleModelTypeDef"]):
+        if boto3_raw_data is None:
+            return None
+        return cls(boto3_raw_data=boto3_raw_data)
+
+    @classmethod
+    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelTypeDef"]]):
+        if boto3_raw_data_list is None:
+            return None
+        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
 
 @dataclasses.dataclass(frozen=True)
 class SimpleModelWithSubscript:
     boto3_raw_data: "type_defs.SimpleModelWithSubscriptTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr1(self):
+    def attr1(self):  # pragma: no cover
         return self.boto3_raw_data["attr1"]
 
     @cached_property
-    def attr2(self):
+    def attr2(self):  # pragma: no cover
         return self.boto3_raw_data["attr2"]
 
     @cached_property
-    def attr3(self):
+    def attr3(self):  # pragma: no cover
         return self.boto3_raw_data["attr3"]
 
+    @classmethod
+    def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleModelWithSubscriptTypeDef"]):
+        if boto3_raw_data is None:
+            return None
+        return cls(boto3_raw_data=boto3_raw_data)
+
+    @classmethod
+    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelWithSubscriptTypeDef"]]):
+        if boto3_raw_data_list is None:
+            return None
+        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
 
 @dataclasses.dataclass(frozen=True)
 class SimpleModelWithNestedSubscript:
-    boto3_raw_data: "type_defs.SimpleModelWithNestedSubscriptTypeDef" = (
-        dataclasses.field()
-    )
+    boto3_raw_data: "type_defs.SimpleModelWithNestedSubscriptTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr1(self):
+    def attr1(self):  # pragma: no cover
         return self.boto3_raw_data["attr1"]
 
     @cached_property
-    def attr2(self):
+    def attr2(self):  # pragma: no cover
         return self.boto3_raw_data["attr2"]
 
+    @classmethod
+    def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleModelWithNestedSubscriptTypeDef"]):
+        if boto3_raw_data is None:
+            return None
+        return cls(boto3_raw_data=boto3_raw_data)
+
+    @classmethod
+    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelWithNestedSubscriptTypeDef"]]):
+        if boto3_raw_data_list is None:
+            return None
+        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
 
 @dataclasses.dataclass(frozen=True)
 class SimpleContainer:
     boto3_raw_data: "type_defs.SimpleContainerTypeDef" = dataclasses.field()
 
     @cached_property
-    def attr1(self):
-        return SimpleModel(boto3_raw_data=self.boto3_raw_data["attr1"])
+    def attr1(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr1"])
 
     @cached_property
-    def attr2(self):
-        return SimpleModel(boto3_raw_data=self.boto3_raw_data["attr2"])
+    def attr2(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr2"])
 
     @cached_property
-    def attr3(self):
-        return SimpleModel(boto3_raw_data=self.boto3_raw_data["attr3"])
+    def attr3(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr3"])
 
     @cached_property
-    def attr4(self):
-        return SimpleModel(boto3_raw_data=self.boto3_raw_data["attr4"])
+    def attr4(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr4"])
 
     @cached_property
-    def attr5(self):
-        return SimpleModel(boto3_raw_data=self.boto3_raw_data["attr5"])
+    def attr5(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr5"])
 
     @cached_property
-    def attr6(self):
-        return SimpleModel(boto3_raw_data=self.boto3_raw_data["attr6"])
+    def attr6(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr6"])
 
     @cached_property
-    def attr7(self):
-        return [
-            SimpleModel(boto3_raw_data=data) for data in self.boto3_raw_data["attr7"]
-        ]
+    def attr7(self):  # pragma: no cover
+        return SimpleModel.make_many(self.boto3_raw_data["attr7"])
 
     @cached_property
-    def attr8(self):
-        return [
-            SimpleModel(boto3_raw_data=data) for data in self.boto3_raw_data["attr8"]
-        ]
+    def attr8(self):  # pragma: no cover
+        return SimpleModel.make_many(self.boto3_raw_data["attr8"])
+
+    @cached_property
+    def attr9(self):  # pragma: no cover
+        return SimpleModel.make_many(self.boto3_raw_data["attr9"])
+
+    @classmethod
+    def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleContainerTypeDef"]):
+        if boto3_raw_data is None:
+            return None
+        return cls(boto3_raw_data=boto3_raw_data)
+
+    @classmethod
+    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleContainerTypeDef"]]):
+        if boto3_raw_data_list is None:
+            return None
+        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
+
+@dataclasses.dataclass(frozen=True)
+class User:
+    boto3_raw_data: "type_defs.UserTypeDef" = dataclasses.field()
+
+    @cached_property
+    def id(self):  # pragma: no cover
+        return self.boto3_raw_data["id"]
+
+    @cached_property
+    def name(self):  # pragma: no cover
+        return self.boto3_raw_data["name"]
+
+    @cached_property
+    def attr1(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr1"])
+
+    @cached_property
+    def attr2(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr2"])
+
+    @cached_property
+    def attr3(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr3"])
+
+    @cached_property
+    def attr4(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr4"])
+
+    @cached_property
+    def attr5(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr5"])
+
+    @cached_property
+    def attr6(self):  # pragma: no cover
+        return SimpleModel.make_one(self.boto3_raw_data["attr6"])
+
+    @cached_property
+    def attr7(self):  # pragma: no cover
+        return SimpleModel.make_many(self.boto3_raw_data["attr7"])
+
+    @cached_property
+    def attr8(self):  # pragma: no cover
+        return SimpleModel.make_many(self.boto3_raw_data["attr8"])
+
+    @cached_property
+    def attr9(self):  # pragma: no cover
+        return SimpleModel.make_many(self.boto3_raw_data["attr9"])
+
+    @classmethod
+    def make_one(cls, boto3_raw_data: T.Optional["type_defs.UserTypeDef"]):
+        if boto3_raw_data is None:
+            return None
+        return cls(boto3_raw_data=boto3_raw_data)
+
+    @classmethod
+    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.UserTypeDef"]]):
+        if boto3_raw_data_list is None:
+            return None
+        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]

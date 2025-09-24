@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from boto3_dataclass.gen_code.gen_code import (
+    TypedDictFieldAnnotation,
     TypedDictField,
     TypedDictDef,
     TypedDictDefMapping,
@@ -10,7 +11,9 @@ defs = [
     TypedDictDef(
         name="SimpleModelTypeDef",
         fields=[
-            TypedDictField(name="attr1"),
+            TypedDictField(
+                name="attr1",
+            ),
         ],
     ),
     TypedDictDef(
@@ -33,45 +36,146 @@ defs = [
         fields=[
             TypedDictField(
                 name="attr1",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
             ),
             TypedDictField(
                 name="attr2",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
             ),
             TypedDictField(
                 name="attr3",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
             ),
             TypedDictField(
                 name="attr4",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
             ),
             TypedDictField(
                 name="attr5",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
             ),
             TypedDictField(
                 name="attr6",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
             ),
             TypedDictField(
                 name="attr7",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
-                nested_type_subscriptor="List",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                    nested_type_subscriptor="List",
+                ),
             ),
             TypedDictField(
                 name="attr8",
-                is_nested_typed_dict=True,
-                nested_type_name="SimpleModelTypeDef",
-                nested_type_subscriptor="List",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                    nested_type_subscriptor="List",
+                ),
+            ),
+            TypedDictField(
+                name="attr9",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                    nested_type_subscriptor="List",
+                ),
+            ),
+        ],
+    ),
+    TypedDictDef(
+        name="UserTypeDef",
+        fields=[
+            TypedDictField(
+                name="id",
+            ),
+            TypedDictField(
+                name="name",
+            ),
+            TypedDictField(
+                name="attr1",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
+            ),
+            TypedDictField(
+                name="attr2",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
+            ),
+            TypedDictField(
+                name="attr3",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
+            ),
+            TypedDictField(
+                name="attr4",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
+            ),
+            TypedDictField(
+                name="attr5",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
+            ),
+            TypedDictField(
+                name="attr6",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                ),
+            ),
+            TypedDictField(
+                name="attr7",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                    nested_type_subscriptor="List",
+                ),
+            ),
+            TypedDictField(
+                name="attr8",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                    nested_type_subscriptor="List",
+                ),
+            ),
+            TypedDictField(
+                name="attr9",
+                anno=TypedDictFieldAnnotation(
+                    is_nested_typed_dict=True,
+                    nested_type_name="SimpleModelTypeDef",
+                    nested_type_subscriptor="List",
+                ),
             ),
         ],
     ),
