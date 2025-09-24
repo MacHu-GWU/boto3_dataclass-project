@@ -8,6 +8,8 @@ PACKAGE_NAME = dir_package.name
 
 dir_project_root = dir_package.parent
 
+dir_srv = dir_package / "srv"
+
 # ------------------------------------------------------------------------------
 # Virtual Environment Related
 # ------------------------------------------------------------------------------

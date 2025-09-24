@@ -16,7 +16,19 @@ import dataclasses
 from functools import cached_property
 from pathlib import Path
 
+from ..paths import dir_srv
+
+from .type_defs_parser import TypedDictDefMappingParser
+
 dir_site_packages = Path(site.getsitepackages()[0])
+
+
+def write(path: Path, text: str):
+    try:
+        path.write_text(text, encoding="utf-8")
+    except FileNotFoundError:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text, encoding="utf-8")
 
 
 @dataclasses.dataclass
@@ -28,7 +40,7 @@ class Boto3Stubs:
     service: str = dataclasses.field()
 
     @cached_property
-    def dir_folder(self) -> Path:
+    def dir_package_folder(self) -> Path:
         """
         Get the directory path for a given package or module name.
 
@@ -44,7 +56,7 @@ class Boto3Stubs:
 
         Example: ``site-packages/mypy_boto3_ec2/literals.pyi``
         """
-        return self.dir_folder / "literals.pyi"
+        return self.dir_package_folder / "literals.pyi"
 
     @cached_property
     def path_type_def_stub_file(self) -> Path:
@@ -53,7 +65,7 @@ class Boto3Stubs:
 
         Example: ``site-packages/mypy_boto3_ec2/type_defs.pyi``
         """
-        return self.dir_folder / "type_defs.pyi"
+        return self.dir_package_folder / "type_defs.pyi"
 
     @cached_property
     def path_client_stub_file(self) -> Path:
@@ -62,10 +74,10 @@ class Boto3Stubs:
 
         Example: ``site-packages/mypy_boto3_ec2/client.pyi``
         """
-        return self.dir_folder / "client.pyi"
+        return self.dir_package_folder / "client.pyi"
 
     @classmethod
-    def list_all(cls):
+    def list_all(cls) -> list["Boto3Stubs"]:
         """
         List all available mypy_boto3_* stubs in the site-packages directory.
 
@@ -77,3 +89,35 @@ class Boto3Stubs:
                 service = path.name.removeprefix("mypy_boto3_")
                 boto3_stubs_list.append(cls(service=service))
         return boto3_stubs_list
+
+    @cached_property
+    def dir_code(self) -> Path:
+        """
+        Example: ``boto3_dataclass/srv/ec2``
+        """
+        name = f"{self.service}"
+        mapping = {
+            "lambda": "lambda_",
+        }
+        name = mapping.get(name, name)
+        return dir_srv / name
+
+    @cached_property
+    def path_code_type_defs(self) -> Path:
+        """
+        Get the path to the generated module file for the service.
+
+        Example: ``boto3_dataclass/srv/ec2/type_defs.py``
+        """
+        return self.dir_code / "type_defs.py"
+
+    def gen_code(self) -> str:
+        tddm_parser = TypedDictDefMappingParser(path_stub_file=self.path_code_type_defs)
+        tddm = tddm_parser.parse()
+        code = tddm.gen_code(
+            type_defs_line=f"from mypy_boto3_{self.service} import type_defs",
+        )
+        return code
+
+    def write_code(self):
+        write(self.path_code_type_defs, self.gen_code())
