@@ -26,6 +26,8 @@ dir_unit_test = dir_project_root / "tests"
 dir_int_test = dir_project_root / "tests_int"
 dir_load_test = dir_project_root / "tests_load"
 
+path_test_stub_file = dir_package / "tests" / "gen_code" / "type_defs.pyi"
+
 # ------------------------------------------------------------------------------
 # Doc Related
 # ------------------------------------------------------------------------------

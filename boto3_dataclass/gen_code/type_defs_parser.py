@@ -8,16 +8,19 @@
     把需要共享的数据作为属性放在 ``_attr_name`` 的属性中, 使得代码更加简洁清晰.
 """
 
-import typing as T
 import ast
 import dataclasses
 from pathlib import Path
 from functools import cached_property
 
+try:
+    from rich import print as rprint
+except ImportError: # pragma: no cover
+    pass
+
 from ..constants import TYPE_DEF, TYPED_DICT
 
 from .gen_code import (
-    NESTED_TYPE_SUBSCRIPTOR,
     TypedDictFieldAnnotation,
     TypedDictField,
     TypedDictDef,
@@ -194,23 +197,21 @@ class TypedDictDefMappingParser:
                 name: str
         """
         name = node_td.name
-        print(
-            f"{str(node_td.lineno).zfill(self.zfill)} class {name}: # <--- parse this"
-        )
+        lineno = str(node_td.lineno).zfill(self.zfill)
+        print(f"{lineno} class {name}: # <--- parse this")
         fields = []
         for i, node in enumerate(node_td.body, start=1):
             if isinstance(node, ast.AnnAssign):
                 text = ast.get_source_segment(self.stub_file_content, node)
-                print(
-                    f"{str(node.lineno).zfill(self.zfill)}    {text} # <--- parse this"
-                )
+                lineno = str(node.lineno).zfill(self.zfill)
+                print(f"{lineno}    {text} # <--- parse this")
                 typed_dict_field = self.parse_typed_dict_ann_assign(node)
                 fields.append(typed_dict_field)
                 # break
             else:
-                print(f"Not Annotation Assign: {node = }")  # for debug only
+                # print(f"Not Annotation Assign: {node = }")  # for debug only
+                pass
         typed_dict_def = TypedDictDef(name=name, fields=fields)
-        # rprint(typed_dict_def)
         return typed_dict_def
 
     def parse_typed_dict_ann_assign(
@@ -326,7 +327,7 @@ class TypedDictFieldAnnotationParser:
         self.handle_simple_subscript(annotation)
 
     def handle_list_subscript(self, annotation: ast.Subscript):
-        self.nested_type_subscriptor = "List"
+        self._anno.nested_type_subscriptor = "List"
         self.handle_simple_subscript(annotation)
 
 

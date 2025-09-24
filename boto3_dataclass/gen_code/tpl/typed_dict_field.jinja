@@ -1,10 +1,10 @@
     @cached_property
     def {{ tdf.name }}(self):  # pragma: no cover
-        {%- if tdf.is_nested_typed_dict %}
-            {%- if tdf.nested_type_subscriptor == 'List' %}
-        return [{{ tdf.nested_model_name }}(dct) for dct in self.boto3_raw_data["{{ tdf.name }}"]]
+        {%- if tdf.anno.is_nested_typed_dict %}
+            {%- if tdf.anno.nested_type_subscriptor == 'List' %}
+        return {{ tdf.anno.nested_model_name }}.make_many(self.boto3_raw_data["{{ tdf.name }}"])
             {%- else %}
-        return {{ tdf.nested_model_name }}(self.boto3_raw_data["{{ tdf.name }}"])
+        return {{ tdf.anno.nested_model_name }}.make_one(self.boto3_raw_data["{{ tdf.name }}"])
             {%- endif %}
         {%- else %}
         return self.boto3_raw_data["{{ tdf.name }}"]
