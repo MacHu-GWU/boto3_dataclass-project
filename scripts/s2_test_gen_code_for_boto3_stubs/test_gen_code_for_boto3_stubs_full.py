@@ -1,5 +1,8 @@
 # -*- coding: utf-8 -*-
 
+"""
+
+"""
 import mpire
 from boto3_dataclass.gen_code.stub_file import Boto3Stubs
 

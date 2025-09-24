@@ -5,7 +5,9 @@ from boto3_dataclass.gen_code.stub_file import Boto3Stubs
 from boto3_dataclass.gen_code.type_defs_parser import TypedDictDefMappingParser
 
 # ------------------------------------------------------------------------------
-service = "lambda"
+service = "iam"
+# service = "s3"
+# service = "lambda"
 # service = "bedrock_runtime"
 # ------------------------------------------------------------------------------
 
