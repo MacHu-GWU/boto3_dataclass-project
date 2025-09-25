@@ -56,6 +56,15 @@ class TestSemVer:
         assert sem_ver.lower_version == "1.40.0"
         assert sem_ver.upper_version == "1.41.0"
 
+        sem_ver = SemVer.parse("1.40.5.dev1")
+        assert sem_ver.major == 1
+        assert sem_ver.minor == 40
+        assert sem_ver.patch == 5
+        assert sem_ver.version == "1.40.5"
+        assert sem_ver.lower_version == "1.40.0"
+        assert sem_ver.upper_version == "1.41.0"
+        assert sem_ver.dev_id == "dev1"
+
 
 if __name__ == "__main__":
     from boto3_dataclass.tests import run_cov_test

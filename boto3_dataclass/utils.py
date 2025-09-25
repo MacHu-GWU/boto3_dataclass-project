@@ -51,9 +51,11 @@ class SemVer:
     """
     Semantic Versioning (SemVer) representation.
     """
+
     major: int = dataclasses.field()
     minor: int = dataclasses.field()
     patch: int = dataclasses.field()
+    dev_id: str | None = dataclasses.field(default=None)
 
     @property
     def version(self) -> str:
@@ -69,5 +71,13 @@ class SemVer:
 
     @classmethod
     def parse(cls, s: str):
-        major, minor, patch = map(int, s.split("."))
-        return cls(major, minor, patch)
+        parts = s.split(".")
+        if len(parts) == 3:
+            major, minor, patch = map(int, parts)
+            return cls(major, minor, patch)
+        elif len(parts) == 4:
+            major, minor, patch = map(int, parts[:3])
+            dev_id = parts[3]
+            return cls(major, minor, patch, dev_id)
+        else:  # pragma: no cover
+            raise ValueError(f"Invalid version string: {s}")
