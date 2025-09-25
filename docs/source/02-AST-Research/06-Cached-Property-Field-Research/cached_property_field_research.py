@@ -12,6 +12,9 @@
 减少代码量::
 
     profile = field("profile")
+
+经过测试, 如果用了 field constructor 而不用 @cached_property,
+boto3_dataclass_ec2/type_defs.py 中的代码可以从 84005 行减少到 59538 行, 减少了 24467 行, 约 29.1%.
 """
 
 import typing as T
