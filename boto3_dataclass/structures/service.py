@@ -90,8 +90,9 @@ class Service:
         service_list = list()
         for path in dir_site_packages.iterdir():
             if path.name.startswith("mypy_boto3_"):
-                service_name = path.name.removeprefix("mypy_boto3_")
-                service_list.append(cls(service_name=service_name))
+                if path.joinpath("client.pyi").exists():
+                    service_name = path.name.removeprefix("mypy_boto3_")
+                    service_list.append(cls(service_name=service_name))
         return service_list
 
     @cached_property
