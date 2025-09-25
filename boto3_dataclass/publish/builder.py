@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+import typing as T
 import shutil
 import subprocess
 import dataclasses
@@ -125,6 +126,21 @@ class PackageBuilder:
         return [cls(service=service, version=version) for service in service_list]
 
     @classmethod
+    def _parallel_run(
+        cls,
+        version: str,
+        func: T.Callable[[int, "PackageBuilder"], None],
+        n_workers: int | None = None,
+    ):
+        package_list = cls.list_all(version=version)
+        tasks = [
+            {"ith": i, "package": package}
+            for i, package in enumerate(package_list, start=1)
+        ]
+        with mpire.WorkerPool(n_jobs=n_workers, start_method="fork") as pool:
+            results = pool.map(func, tasks)
+
+    @classmethod
     def parallel_build_all(
         cls,
         version: str,
@@ -134,13 +150,7 @@ class PackageBuilder:
             package.log(ith)
             package.build_all()
 
-        package_list = cls.list_all(version=version)
-        tasks = [
-            {"ith": i, "package": package}
-            for i, package in enumerate(package_list, start=1)
-        ]
-        with mpire.WorkerPool(n_jobs=n_workers, start_method="fork") as pool:
-            results = pool.map(main, tasks)
+        cls._parallel_run(version=version, func=main, n_workers=n_workers)
 
     def poetry_build(self):
         args = ["poetry", "build"]
@@ -153,6 +163,19 @@ class PackageBuilder:
                 upload_settings=config.twine_upload_settings,
                 dists=self.service.dist_files,
             )
+
+    @classmethod
+    def parallel_upload_all(
+        cls,
+        version: str,
+        n_workers: int | None = None,
+    ):
+        def main(ith: int, package: "PackageBuilder"):
+            package.log(ith)
+            package.poetry_build()
+            package.twine_upload()
+
+        cls._parallel_run(version=version, func=main, n_workers=n_workers)
 
     def pip_install_editable(self):
         dir_repo = self.service.dir_boto3_dataclass_repo

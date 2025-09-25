@@ -90,7 +90,7 @@ class Service:
         service_list = list()
         for path in dir_site_packages.iterdir():
             if path.name.startswith("mypy_boto3_"):
-                if path.joinpath("client.pyi").exists():
+                if (path.joinpath("client.pyi").exists() and path.joinpath("type_defs.pyi").exists()):
                     service_name = path.name.removeprefix("mypy_boto3_")
                     service_list.append(cls(service_name=service_name))
         return service_list
