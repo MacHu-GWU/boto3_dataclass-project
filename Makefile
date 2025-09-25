@@ -23,7 +23,6 @@
 		build-doc \
 		view-doc \
 		build \
-		publish \
 		release \
 		setup-codecov \
 		setup-rtd \
@@ -117,10 +116,6 @@ view-doc: ## ⭐ View documentation website locally
 
 build: ## Build Python library distribution package
 	~/.pyenv/shims/python ./bin/g5_t1_s1_build_package.py
-
-
-publish: build ## ⭐ Publish Python library to Public PyPI
-	~/.pyenv/shims/python ./bin/g5_t2_s1_publish_package.py
 
 
 release: ## ⭐ Create Github Release using current version
