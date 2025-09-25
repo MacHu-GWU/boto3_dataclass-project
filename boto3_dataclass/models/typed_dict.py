@@ -87,7 +87,7 @@ class TypedDictField:
         """
         生成字段的代码字符串.
         """
-        return tpl_enum.boto3_dataclass_service__typed_dict_field.render(tdf=self)
+        return tpl_enum.boto3_dataclass_service__package__typed_dict_field.render(tdf=self)
 
 
 @dataclasses.dataclass
@@ -124,7 +124,7 @@ class TypedDictDef:
         """
         生成 TypedDict 的代码字符串.
         """
-        return tpl_enum.boto3_dataclass_service__typed_dict_def.render(td=self)
+        return tpl_enum.boto3_dataclass_service__package__typed_dict_def.render(td=self)
 
 
 @dataclasses.dataclass
@@ -150,6 +150,6 @@ class TypedDefsModule:
         :param type_defs_line: The line to import the type definitions module.
             Example: ``"from boto3_dataclass.tests.gen_code import type_defs"``
         """
-        return tpl_enum.boto3_dataclass_service__type_defs_py.render(
+        return tpl_enum.boto3_dataclass_service__package__type_defs_py.render(
             tddm=self, type_defs_line=type_defs_line
         )
