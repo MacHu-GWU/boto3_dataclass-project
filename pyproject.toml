@@ -52,6 +52,7 @@ dependencies = [
     "wheel>=0.45.0,<1.0.0", # build wheel package
     "mpire>=2.10.2,<3.0.0", # multi-process parallel computing
     "twine>=6.0.0,<7.0.0", # distribute package to PyPI
+    "httpx>=0.28.1,<1.0.0", # HTTP client
 ]
 
 # ------------------------------------------------------------------------------
