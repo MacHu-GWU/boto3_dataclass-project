@@ -49,7 +49,7 @@ class ClientModuleParser(StubFileParser):
                 self.parse_client_class(node)
                 return self.caster_module
 
-        raise ValueError("No client class found in the stub file.")
+        raise ValueError("No client class found in the stub file.")  # pragma: no cover
 
     def is_client_class_node(self, node) -> bool:
         """
@@ -73,7 +73,7 @@ class ClientModuleParser(StubFileParser):
         :param node_cd: client 类的 AST ClassDef 节点
         """
         name = node_cd.name
-        if DEBUG:
+        if DEBUG:  # pragma: no cover
             lineno = str(node_cd.lineno).zfill(self.zfill)
             print(f"{lineno} class {name}: # <--- parse this")  # for debug only
         methods = []
@@ -110,7 +110,7 @@ class ClientModuleParser(StubFileParser):
         """
         method_name = node.name
         return_type = node.returns.id  # boto3-stubs 中的 TypedDict 类型名
-        if DEBUG:
+        if DEBUG:  # pragma: no cover
             lineno = str(node.lineno).zfill(self.zfill)
             text = f"{lineno}    def {method_name}(self, ...) -> {return_type} # <--- parse this"
             print(text)

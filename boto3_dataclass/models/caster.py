@@ -21,6 +21,7 @@ Caster 模块的作用是提供一个便捷的转换层, 让用户可以无缝�
 """
 
 import dataclasses
+from functools import cached_property
 
 from ..templates.template_enum import tpl_enum
 
@@ -66,6 +67,13 @@ class CasterModule:
     """
     service_name: str = dataclasses.field()
     cms: list[CasterMethod] = dataclasses.field(default_factory=list)
+
+    @cached_property
+    def cms_mapping(self) -> dict[str, "CasterMethod"]:
+        """
+        NEW 通过方法名称获取转换器方法的映射, 例如 ``{"get_role": <CasterMethod>, ...}``.
+        """
+        return {cm.method_name: cm for cm in self.cms}
 
     def gen_code(self) -> str:
         """
