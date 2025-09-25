@@ -87,7 +87,7 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
 
     def build_LICENSE_txt(self):
         path = self.structure.path_LICENSE_txt
-        tpl = tpl_enum.boto3_dataclass_service__LICENSE_txt
+        tpl = tpl_enum.common__LICENSE_txt
         self.build_by_template(path, tpl)
 
     @classmethod
