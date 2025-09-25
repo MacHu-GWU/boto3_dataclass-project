@@ -197,6 +197,26 @@ webencodings = "*"
 css = ["tinycss2 (>=1.1.0,<1.5)"]
 
 [[package]]
+name = "boto-session-manager"
+version = "1.8.1"
+description = "Provides an alternative, or maybe a more user friendly way to use the native boto3 API."
+optional = true
+python-versions = ">=3.8"
+groups = ["main"]
+markers = "extra == \"dev\""
+files = [
+    {file = "boto_session_manager-1.8.1-py3-none-any.whl", hash = "sha256:ca73b7356cc6af626a9794bc36a44d998312cb4686f5c408d45603cce3e47323"},
+    {file = "boto_session_manager-1.8.1.tar.gz", hash = "sha256:68f8cd1f60ab7e245875caacbc58416830f0c6dc5562ed9cbea6a55db100382f"},
+]
+
+[package.dependencies]
+boto3 = "*"
+
+[package.extras]
+docs = ["Sphinx (==5.3.0)", "docfly (==2.0.3)", "furo (==2023.03.27)", "ipython (==8.10.0)", "nbsphinx (==0.8.12)", "pygments (==2.15.1)", "rstobj (==1.2.1)", "sphinx-copybutton (==0.5.1)", "sphinx-design (==0.5.0)", "sphinx-jinja (==2.0.2)"]
+tests = ["awscli", "boto3", "pytest", "pytest-cov"]
+
+[[package]]
 name = "boto3"
 version = "1.40.35"
 description = "The AWS SDK for Python"
@@ -3281,11 +3301,11 @@ type = ["pytest-mypy"]
 
 [extras]
 auto = []
-dev = ["build", "rich"]
+dev = ["boto_session_manager", "build", "rich"]
 doc = ["Sphinx", "docfly", "furo", "ipython", "nbsphinx", "pygments", "rstobj", "sphinx-copybutton", "sphinx-design", "sphinx-jinja"]
 test = ["pytest", "pytest-cov"]
 
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.9,<4.0"
-content-hash = "12f6027e870816310f91f5be1875523f996d6a4196d4ebc813f51b7ce83f710a"
+content-hash = "ee34db4fb213d2ac0d1250e9f29be5e9fabc269fc4cabb634f3ac1fa1ac6a2d4"

@@ -67,6 +67,7 @@ dependencies = [
 # Local Development dependenceies
 # ------------------------------------------------------------------------------
 dev = [
+    "boto_session_manager>=1.8.1,<2.0.0", # manage AWS boto3 session
     "build>=1.2.1,<2.0.0", # build source distribution
     "rich>=13.8.1,<14.0.0", # pretty print
 ]

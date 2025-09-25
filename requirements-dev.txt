@@ -1,5 +1,6 @@
 backports-tarfile==1.2.0 ; python_version >= "3.9" and python_version < "3.12" and platform_machine != "ppc64le" and platform_machine != "s390x"
 black==25.9.0 ; python_version >= "3.9" and python_version < "4.0"
+boto-session-manager==1.8.1 ; python_version >= "3.9" and python_version < "4.0"
 boto3-stubs-full==1.40.35 ; python_version >= "3.9" and python_version < "4.0"
 boto3-stubs==1.40.35 ; python_version >= "3.9" and python_version < "4.0"
 boto3==1.40.35 ; python_version >= "3.9" and python_version < "4.0"
