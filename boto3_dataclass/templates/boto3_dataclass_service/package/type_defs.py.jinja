@@ -7,6 +7,12 @@ from functools import cached_property
 if T.TYPE_CHECKING:  # pragma: no cover
     {{ type_defs_line }}
 
+def field(name: str):
+    def getter(self):
+        return self.boto3_raw_data[name]
+
+    return cached_property(getter)
+
 {% for tdd in tddm.tdds %}
 {{ tdd.gen_code() }}
 {% endfor %}

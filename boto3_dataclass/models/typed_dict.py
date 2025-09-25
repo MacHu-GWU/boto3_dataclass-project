@@ -65,6 +65,9 @@ class TypedDictFieldAnnotation:
         """
         return self.nested_type_name.removesuffix(TYPE_DEF)
 
+field_name_mapping = {
+    "lambda": "lambda_",
+}
 
 @dataclasses.dataclass
 class TypedDictField:
@@ -82,6 +85,10 @@ class TypedDictField:
     anno: TypedDictFieldAnnotation = dataclasses.field(
         default_factory=TypedDictFieldAnnotation,
     )
+
+    @property
+    def safe_field_name(self) -> str:
+        return field_name_mapping.get(self.name, self.name)
 
     def gen_code(self) -> str:
         """
