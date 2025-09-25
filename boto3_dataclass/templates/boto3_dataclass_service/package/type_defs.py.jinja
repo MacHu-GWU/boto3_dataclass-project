@@ -7,6 +7,6 @@ from functools import cached_property
 if T.TYPE_CHECKING:  # pragma: no cover
     {{ type_defs_line }}
 
-{% for tdd in tddm.defs %}
+{% for tdd in tddm.tdds %}
 {{ tdd.gen_code() }}
 {% endfor %}
