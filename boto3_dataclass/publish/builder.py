@@ -1,10 +1,15 @@
 # -*- coding: utf-8 -*-
 
 import shutil
+import subprocess
 import dataclasses
 
 import mpire
 from black import format_file_contents, Mode
+import twine.settings
+import twine.commands.upload
+from twine.exceptions import TwineException
+from ..vendor.better_pathlib import temp_cwd
 
 from ..utils import write
 from ..templates.template_enum import tpl_enum
@@ -27,8 +32,8 @@ def gen_code_init_py(self):
 
 @dataclasses.dataclass
 class PackageBuilder:
-    service: Service
-    version: str
+    service: Service = dataclasses.field()
+    version: str = dataclasses.field()
 
     def log(self, ith: int | None = None):
         path = f"file://{self.service.dir_boto3_dataclass_repo}"
@@ -129,3 +134,20 @@ class PackageBuilder:
         ]
         with mpire.WorkerPool(n_jobs=n_workers, start_method="fork") as pool:
             results = pool.map(main, tasks)
+
+    def poetry_build(self):
+        args = ["poetry", "build"]
+        with temp_cwd(self.service.dir_boto3_dataclass_repo):
+            subprocess.run(args)
+
+    def twine_upload(self):
+        twine.commands.upload.upload(
+            twine.settings.Settings(
+                username=os.getenv("PYPI_USERNAME"),
+                password=os.getenv("PYPI_PASSWORD"),
+                non_interactive=True,
+                disable_progress_bar=True,
+                skip_existing=True,
+            ),
+            [path.as_posix()],
+        )

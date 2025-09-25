@@ -46,6 +46,10 @@ dependencies = [
     "func-args>=1.0.1,<2.0.0",
     "boto3>=1.40.0,<2.0.0",
     "boto3-stubs[full]>=1.40.0,<2.0.0",
+    "black>=25.1.0,<26.0.0",
+    "wheel>=0.45.0,<1.0.0", # build wheel package
+    "mpire>=2.10.2,<3.0.0", # multi-process parallel computing
+    "twine>=6.0.0,<7.0.0", # distribute package to PyPI
 ]
 
 # ------------------------------------------------------------------------------
@@ -61,11 +65,8 @@ dependencies = [
 # Local Development dependenceies
 # ------------------------------------------------------------------------------
 dev = [
-    "twine>=6.0.0,<7.0.0", # distribute package to PyPI
-    "wheel>=0.45.0,<1.0.0", # build wheel package
     "build>=1.2.1,<2.0.0", # build source distribution
     "rich>=13.8.1,<14.0.0", # pretty print
-    "mpire>=2.10.2,<3.0.0", # multi-process parallel computing
 ]
 
 # ------------------------------------------------------------------------------
