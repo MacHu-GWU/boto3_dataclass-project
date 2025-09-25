@@ -2,8 +2,6 @@
 
 from typing import TypedDict, Required, NotRequired, Optional, Dict, List
 
-from iterals import ProfileStatusType
-
 class SimpleModelTypeDef(TypedDict):
     attr1: str
 
@@ -45,15 +43,3 @@ UserTypeDef = TypedDict(
         "attr9": NotRequired[List[SimpleModelTypeDef]],
     },
 )
-
-# class ProfileTypeDef(TypedDict):
-#     firstname: str
-#     lastname: Required[str]
-#     phone_number: NotRequired[str]
-#     status: ProfileStatusType
-#
-# class UserTypeDef(TypedDict):
-#     user_id: Required[int]
-#     profile: Required[ProfileTypeDef]
-#     labels: NotRequired[List[str]]
-#     tags: Dict[str, str]
