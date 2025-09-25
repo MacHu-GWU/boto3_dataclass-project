@@ -19,15 +19,13 @@ class TestTypedDictField:
         )
         code = field.gen_code()
         expected = """
-        @cached_property
-        def id(self):  # pragma: no cover
-            return self.boto3_raw_data["id"]
+        id = field("id")
         """
         assert compare_code(code, expected, debug=DEBUG) is True
 
         # case 2
         field = TypedDictField(
-            name="id",
+            name="user",
             anno=TypedDictFieldAnnotation(
                 is_nested_typed_dict=True,
                 nested_type_name="UserTypeDef",
@@ -37,8 +35,26 @@ class TestTypedDictField:
 
         expected = """
         @cached_property
-        def id(self):  # pragma: no cover
-            return User.make_one(self.boto3_raw_data["id"])
+        def user(self):  # pragma: no cover
+            return User.make_one(self.boto3_raw_data["user"])
+        """
+        assert compare_code(code, expected, debug=DEBUG) is True
+
+        # case 3
+        field = TypedDictField(
+            name="users",
+            anno=TypedDictFieldAnnotation(
+                is_nested_typed_dict=True,
+                nested_type_name="UserTypeDef",
+                nested_type_subscriptor="List",
+            ),
+        )
+        code = field.gen_code()
+
+        expected = """
+        @cached_property
+        def users(self):  # pragma: no cover
+            return User.make_many(self.boto3_raw_data["users"])
         """
         assert compare_code(code, expected, debug=DEBUG) is True
 
@@ -73,9 +89,7 @@ class TestTypedDictDef:
         class User:
             boto3_raw_data: "type_defs.UserTypeDef" = dataclasses.field()
         
-            @cached_property
-            def id(self):  # pragma: no cover
-                return self.boto3_raw_data["id"]
+            id = field("id")
         
             @cached_property
             def user(self):  # pragma: no cover
