@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import textwrap
+import dataclasses
 from pathlib import Path
 
 
@@ -43,3 +44,30 @@ def write(path: Path, content: str):
     except FileNotFoundError:
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_text(content, encoding="utf-8")
+
+
+@dataclasses.dataclass
+class SemVer:
+    """
+    Semantic Versioning (SemVer) representation.
+    """
+    major: int = dataclasses.field()
+    minor: int = dataclasses.field()
+    patch: int = dataclasses.field()
+
+    @property
+    def version(self) -> str:
+        return f"{self.major}.{self.minor}.{self.patch}"
+
+    @property
+    def lower_version(self) -> str:
+        return f"{self.major}.{self.minor}.0"
+
+    @property
+    def upper_version(self) -> str:
+        return f"{self.major}.{self.minor + 1}.0"
+
+    @classmethod
+    def parse(cls, s: str):
+        major, minor, patch = map(int, s.split("."))
+        return cls(major, minor, patch)

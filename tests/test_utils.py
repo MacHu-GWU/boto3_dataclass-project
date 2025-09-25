@@ -3,6 +3,7 @@
 from boto3_dataclass.utils import (
     normalize_code,
     compare_code,
+    SemVer,
 )
 
 
@@ -43,6 +44,17 @@ def test_compare_code():
         self.name = name
     """
     assert compare_code(s, s1) is True
+
+
+class TestSemVer:
+    def test(self):
+        sem_ver = SemVer.parse("1.40.5")
+        assert sem_ver.major == 1
+        assert sem_ver.minor == 40
+        assert sem_ver.patch == 5
+        assert sem_ver.version == "1.40.5"
+        assert sem_ver.lower_version == "1.40.0"
+        assert sem_ver.upper_version == "1.41.0"
 
 
 if __name__ == "__main__":
