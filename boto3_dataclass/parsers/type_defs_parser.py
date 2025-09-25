@@ -11,7 +11,6 @@
 import ast
 import dataclasses
 from pathlib import Path
-from functools import cached_property
 
 try:
     from rich import print as rprint
@@ -27,6 +26,8 @@ from ..models.typed_dict import (
     TypedDefsModule,
 )
 
+from .base import StubFileParser
+
 # DEBUG = True
 DEBUG = False
 
@@ -39,44 +40,18 @@ def parse_ast(path: Path) -> ast.Module:
 
 
 @dataclasses.dataclass
-class TypedDefsModuleParser:
+class TypedDefsModuleParser(StubFileParser):
     """
     从 ``mypy_boto3_${aws_service}/type_defs.pyi`` stub file 中解析出所有出现过的
     ``TypedDict`` 的定义.
-
-    :param path_stub_file: stub file 的路径.
     """
-
-    path_stub_file: Path = dataclasses.field()
 
     _typed_dict_name_set: set[str] = dataclasses.field(default_factory=set)
     _tdm: TypedDefsModule = dataclasses.field(init=False)
 
-    @cached_property
-    def stub_file_content(self) -> str:
-        """
-        stub file 的内容的字符串形式.
-        """
-        return self.path_stub_file.read_text(encoding="utf-8")
-
-    @cached_property
-    def zfill(self) -> int:
-        """
-        根据 stub file 的总行数, 计算出行号需要填充多少位数的 0.
-        """
-        total_lines = len(self.stub_file_content.splitlines())
-        return len(str(total_lines))
-
     @property
     def tdm(self) -> TypedDefsModule:
         return self._tdm
-
-    @cached_property
-    def module(self) -> ast.Module:
-        """
-        Parse the stub file content into an AST module.
-        """
-        return ast.parse(self.stub_file_content)
 
     def parse(self) -> TypedDefsModule:
         """
