@@ -4,6 +4,8 @@ import textwrap
 import dataclasses
 from pathlib import Path
 
+from black import format_file_contents, Mode
+
 
 def normalize_code(s: str, dedent: bool = True) -> str:
     if dedent:
@@ -81,3 +83,7 @@ class SemVer:
             return cls(major, minor, patch, dev_id)
         else:  # pragma: no cover
             raise ValueError(f"Invalid version string: {s}")
+
+
+def black_format_code(code: str) -> str:
+    return format_file_contents(code, fast=True, mode=Mode())
