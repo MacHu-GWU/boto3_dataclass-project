@@ -49,6 +49,7 @@ class TypedDefsModuleParser:
 
     path_stub_file: Path = dataclasses.field()
 
+    _typed_dict_name_set: set[str] = dataclasses.field(default_factory=set)
     _tdm: TypedDefsModule = dataclasses.field(init=False)
 
     @cached_property
@@ -112,6 +113,7 @@ class TypedDefsModuleParser:
                 if not isinstance(func, ast.Name):
                     continue
                 if func.id == TYPED_DICT:
+                    self._typed_dict_name_set.add(target.id)
                     typed_dict_def = self.parse_typed_dict_assign(node)
                     # rprint(typed_dict_def)  # for debug only
                     tdds.append(typed_dict_def)
@@ -122,6 +124,7 @@ class TypedDefsModuleParser:
             elif isinstance(node, ast.ClassDef):
                 # 基类有且只有一个, 并且是 TypedDict
                 if len(node.bases) == 1 and node.bases[0].id == TYPED_DICT:
+                    self._typed_dict_name_set.add(node.name)
                     typed_dict_def = self.parse_typed_dict_class_def(node)
                     # rprint(typed_dict_def)  # for debug only
                     tdds.append(typed_dict_def)
@@ -175,7 +178,10 @@ class TypedDefsModuleParser:
                 text = f"{key_text}: {value_text},"
                 lineno = str(key.lineno).zfill(self.zfill)
                 print(f"{lineno}    {text} # <--- parse this")  # for debug only
-            tdfa_parser = TypedDictFieldAnnotationParser(annotation=value)
+            tdfa_parser = TypedDictFieldAnnotationParser(
+                annotation=value,
+                _typed_dict_name_set=self._typed_dict_name_set,
+            )
             tdfa = tdfa_parser.parse()
             tdf = TypedDictField(
                 name=key.value,
@@ -227,7 +233,10 @@ class TypedDefsModuleParser:
         self,
         node_attr: ast.AnnAssign,
     ) -> TypedDictField:
-        tdf_parser = TypedDictFieldParser(node_attr=node_attr)
+        tdf_parser = TypedDictFieldParser(
+            node_attr=node_attr,
+            _typed_dict_name_set=self._typed_dict_name_set,
+        )
         tdf = tdf_parser.parse()
         return tdf
 
@@ -252,6 +261,7 @@ class TypedDictFieldAnnotationParser:
     """
 
     annotation: ast.Name | ast.Subscript = dataclasses.field()
+    _typed_dict_name_set: set[str] = dataclasses.field(default_factory=set)
     _anno: TypedDictFieldAnnotation = dataclasses.field(init=False)
 
     @property
@@ -281,8 +291,9 @@ class TypedDictFieldAnnotationParser:
         处理类型名称, 如果是一个嵌套的 TypedDict, 则标注这个 Field 是一个嵌套的 TypedDict.
         """
         if type_name.endswith(TYPE_DEF):
-            self._anno.is_nested_typed_dict = True
-            self._anno.nested_type_name = type_name
+            if type_name in self._typed_dict_name_set:
+                self._anno.is_nested_typed_dict = True
+                self._anno.nested_type_name = type_name
 
     def handle_name(self, annotation: ast.Name):
         """
@@ -362,6 +373,7 @@ class TypedDictFieldParser:
 
     node_attr: ast.AnnAssign = dataclasses.field()
 
+    _typed_dict_name_set: set[str] = dataclasses.field(default_factory=set)
     _tdf: TypedDictField = dataclasses.field(init=False)
 
     @property
@@ -371,6 +383,7 @@ class TypedDictFieldParser:
     def parse(self) -> TypedDictField:
         tdfa_parser = TypedDictFieldAnnotationParser(
             annotation=self.node_attr.annotation,
+            _typed_dict_name_set=self._typed_dict_name_set,
         )
         tdfa = tdfa_parser.parse()
         self._tdf = TypedDictField(
