@@ -30,13 +30,14 @@ class PackageBuilder:
     version: str
 
     def setup(self):
-        print(f"file://{self.service.dir_boto3_dataclass_repo}")
+        path = f"file://{self.service.dir_boto3_dataclass_repo}"
+        print(f"Work on: {path}")
         shutil.rmtree(self.service.dir_boto3_dataclass_repo, ignore_errors=True)
 
     def build_all(self):
         self.build_type_defs()
-        # self.build_init_py()
-        # self.build_pyproject_toml()
+        self.build_init_py()
+        self.build_pyproject_toml()
 
     def build_type_defs(self):
         # Parse mypy_boto3_{service_name}/type_defs.pyi
@@ -49,7 +50,7 @@ class PackageBuilder:
         path = self.service.path_boto3_dataclass_type_defs_py
         code = tdm.gen_code(type_defs_line=type_defs_line)
         # Format code with black
-        # code = black_format_code(code)
+        code = black_format_code(code)
         # Write to file
         write(path, code)
 
@@ -80,7 +81,8 @@ class PackageBuilder:
         n_workers: int | None = None,
     ):
         def main(ith: int, package: "PackageBuilder"):
-            print(f"========== {ith} {package.service.service_name} ==========")
+            path = f"file://{package.service.dir_boto3_dataclass_repo}"
+            print(f"========== {ith} {package.service.service_name}: {path} ==========")
             package.build_all()
 
         package_list = cls.list_all(version=version)

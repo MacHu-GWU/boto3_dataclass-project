@@ -17,6 +17,7 @@
 """
 
 import typing as T
+import keyword
 import dataclasses
 from functools import cached_property
 
@@ -65,9 +66,9 @@ class TypedDictFieldAnnotation:
         """
         return self.nested_type_name.removesuffix(TYPE_DEF)
 
-field_name_mapping = {
-    "lambda": "lambda_",
-}
+
+field_name_mapping = {name: f"{name}_" for name in keyword.kwlist}
+
 
 @dataclasses.dataclass
 class TypedDictField:
@@ -88,13 +89,18 @@ class TypedDictField:
 
     @property
     def safe_field_name(self) -> str:
+        """
+        如果字段名称是 Python 的关键字, 那么在生成代码的时候需要加一个下划线后缀.
+        """
         return field_name_mapping.get(self.name, self.name)
 
     def gen_code(self) -> str:
         """
         生成字段的代码字符串.
         """
-        return tpl_enum.boto3_dataclass_service__package__typed_dict_field.render(tdf=self)
+        return tpl_enum.boto3_dataclass_service__package__typed_dict_field.render(
+            tdf=self
+        )
 
 
 @dataclasses.dataclass
