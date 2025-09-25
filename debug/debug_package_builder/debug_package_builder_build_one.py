@@ -32,4 +32,14 @@ if __name__ == "__main__":
     package.build_all()
     # pip_install()
 
-    from boto3_dataclass_iam.type_defs import GetRoleResponse
+    # Sample usage after installation
+    # import typing as T
+    # from boto3_dataclass_iam.caster import iam_caster
+    #
+    # if T.TYPE_CHECKING:  # pragma: no cover
+    #     from mypy_boto3_iam import IAMClient
+    #
+    # iam_client: IAMClient = ...
+    # res = iam_client.get_role(RoleName="my-role")
+    # res = iam_caster.get_role(res)
+    # _ = res.Role.Arn  # type hint works
