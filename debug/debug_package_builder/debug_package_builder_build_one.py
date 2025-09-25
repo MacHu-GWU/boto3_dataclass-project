@@ -18,7 +18,9 @@ service_name = "iam"
 
 package = boto3_dc.builders.Boto3DataclassServiceBuilder(
     version=__version__,
-    structure=boto3_dc.structures.Boto3DataclassServiceStructure(package_name=f"boto3_dataclass_{service_name}"),
+    structure=boto3_dc.structures.Boto3DataclassServiceStructure(
+        package_name=f"boto3_dataclass_{service_name}"
+    ),
 )
 
 

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from boto3_dataclass.publish.builder import PackageBuilder
-
-__version__ = "0.1.1"
+from boto3_dataclass.builders.publish_boto3_dataclass_service import (
+    Boto3DataclassServiceBuilder,
+)
 
 if __name__ == "__main__":
-    PackageBuilder.parallel_build_all(version=__version__)
+    Boto3DataclassServiceBuilder.parallel_build_all()
