@@ -66,21 +66,21 @@ class TypedDefsModuleParser(StubFileParser):
             # )
             if isinstance(node, ast.Assign):
                 # 赋值的等号左边必须有且只有一个目标
-                if len(node.targets) != 1:
+                if len(node.targets) != 1:  # pragma: no cover
                     continue
                 target = node.targets[0]
                 # 赋值的等号左边必须是一个 Name 节点
-                if not isinstance(target, ast.Name):
+                if not isinstance(target, ast.Name):  # pragma: no cover
                     continue
                 # 变量名必须是以 TypeDef 结尾
-                if not target.id.endswith(TYPE_DEF):
+                if not target.id.endswith(TYPE_DEF):  # pragma: no cover
                     continue
                 # 赋值的等号右边必须是一个 Call 节点 (TypedDict 的工厂函数)
                 if not isinstance(node.value, ast.Call):
                     continue
                 func = node.value.func
                 # 函数名必须是 TypedDict
-                if not isinstance(func, ast.Name):
+                if not isinstance(func, ast.Name):  # pragma: no cover
                     continue
                 if func.id == TYPED_DICT:
                     self._typed_dict_name_set.add(target.id)
@@ -105,7 +105,7 @@ class TypedDefsModuleParser(StubFileParser):
         self._tdm = TypedDefsModule(
             tdds=tdds,
         )
-        return self._tdm
+        return self.tdm
 
     def parse_typed_dict_assign(
         self,
@@ -126,7 +126,7 @@ class TypedDefsModuleParser(StubFileParser):
         """
         target: ast.Name = node_ass.targets[0]
         name = target.id
-        if DEBUG:
+        if DEBUG:  # pragma: no cover
             lineno = str(target.lineno).zfill(self.zfill)
             print(
                 f"{lineno} {name} = TypedDict(...) # <--- parse this"
@@ -142,7 +142,7 @@ class TypedDefsModuleParser(StubFileParser):
         # For example, in ``"id": int``,
         # ``key`` is the "id" part, ``value`` is the str part
         for key, value in zip(kwargs.keys, kwargs.values):
-            if DEBUG:
+            if DEBUG:  # pragma: no cover
                 key_text = ast.get_source_segment(self.stub_file_content, key)
                 value_text = ast.get_source_segment(self.stub_file_content, value)
                 text = f"{key_text}: {value_text},"
@@ -180,13 +180,13 @@ class TypedDefsModuleParser(StubFileParser):
                 name: str
         """
         name = node_td.name
-        if DEBUG:
+        if DEBUG:  # pragma: no cover
             lineno = str(node_td.lineno).zfill(self.zfill)
             print(f"{lineno} class {name}: # <--- parse this")  # for debug only
         fields = []
         for i, node in enumerate(node_td.body, start=1):
             if isinstance(node, ast.AnnAssign):
-                if DEBUG:
+                if DEBUG:  # pragma: no cover
                     text = ast.get_source_segment(self.stub_file_content, node)
                     lineno = str(node.lineno).zfill(self.zfill)
                     print(f"{lineno}    {text} # <--- parse this")  # for debug only
@@ -254,7 +254,7 @@ class TypedDictFieldAnnotationParser:
             pass
         else:
             raise NotImplementedError(f"Unhandled annotation: {self.annotation}")
-        return self._anno
+        return self.tdfa
 
     def process_type_name(self, type_name: str):
         """
@@ -360,4 +360,4 @@ class TypedDictFieldParser:
             name=self.node_attr.target.id,
             anno=tdfa,
         )
-        return self._tdf
+        return self.tdf
