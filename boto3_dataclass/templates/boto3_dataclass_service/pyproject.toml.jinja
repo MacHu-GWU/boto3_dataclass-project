@@ -37,6 +37,7 @@ classifier = [
 
 dependencies = [
     "typing-extensions; python_version <'3.12'",
+    "{{ package.service.boto3_stubs_package_name_slug }}>={{ package.sem_ver.lower_version }},<{{ package.sem_ver.upper_version }}",
 ]
 
 # Quick Links
