@@ -1,17 +1,24 @@
 # -*- coding: utf-8 -*-
 
+import shutil
+import subprocess
 import dataclasses
 from pathlib import Path
 from functools import cached_property
 
+import twine.commands.upload
+from ..vendor.better_pathlib import temp_cwd
+
 from ..paths import path_enum
+from ..config import config
 
 
 @dataclasses.dataclass
-class PyProject:
+class PyProjectStructure:
     """
     A class representing a Python Project.
     """
+
     package_name: str = dataclasses.field()
 
     @cached_property
@@ -44,6 +51,9 @@ class PyProject:
             / f"{self.package_name}-project"
         )
 
+    def remove_dir(self):
+        shutil.rmtree(self.dir_repo, ignore_errors=True)
+
     @cached_property
     def dir_package(self) -> Path:
         """
@@ -58,7 +68,7 @@ class PyProject:
         """
         Example: ``build/repos/boto3_dataclass_ec2-project/boto3_dataclass_ec2/__init__.py``
         """
-        return self.dir_repo / "__init__.py"
+        return self.dir_package / "__init__.py"
 
     @cached_property
     def path_pyproject_toml(self) -> Path:
@@ -86,9 +96,38 @@ class PyProject:
         """
         Get the list of distribution files in the dist directory.
 
-        Example: ``build/repos/boto3_dataclass_ec2-project/dist/boto3_dataclass_ec2-0.1.1-py3-none-any.whl``
+        Example::
+
+            [
+                "build/repos/boto3_dataclass_ec2-project/dist/boto3_dataclass_ec2-0.1.1.tar.gz",
+                "build/repos/boto3_dataclass_ec2-project/dist/boto3_dataclass_ec2-0.1.1-py3-none-any.whl"
+            ]
         """
+        dists = list()
         dir_dist = self.dir_repo / "dist"
-        return [
-            str(p) for p in dir_dist.iterdir() if p.name.startswith(self.package_name)
+        for p in dir_dist.iterdir():
+            if p.name.startswith(self.package_name) and p.suffix in {".whl", ".tar.gz"}:
+                dists.append(str(p))
+        return dists
+
+    def poetry_build(self):
+        args = ["poetry", "build"]
+        with temp_cwd(self.dir_repo):
+            subprocess.run(args, check=True)
+
+    def twine_upload(self):
+        with temp_cwd(self.dir_repo):
+            twine.commands.upload.upload(
+                upload_settings=config.twine_upload_settings,
+                dists=self.dist_files,
+            )
+
+    def pip_install_editable(self):
+        args = [
+            f"{path_enum.dir_venv_bin / 'pip'}",
+            "install",
+            "-e",
+            ".",
         ]
+        with temp_cwd(self.dir_repo):
+            subprocess.run(args, check=True)
