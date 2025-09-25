@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-Use this script to debug the ``boto3_dataclass.publish.builder.PackageBuilder``
+Use this script to debug
+:meth:`boto3_dataclass.builders.publish_boto3_dataclass_service.Boto3DataclassServiceBuilder.build_all`
 """
 
 import boto3_dataclass.api as boto3_dc
@@ -16,7 +17,7 @@ service_name = "iam"
 # service_name = "lambda"
 # service_name = "bedrock_runtime"
 
-package = boto3_dc.builders.Boto3DataclassServiceBuilder(
+builder = boto3_dc.builders.Boto3DataclassServiceBuilder(
     version=__version__,
     structure=boto3_dc.structures.Boto3DataclassServiceStructure(
         package_name=f"boto3_dataclass_{service_name}"
@@ -26,8 +27,8 @@ package = boto3_dc.builders.Boto3DataclassServiceBuilder(
 
 if __name__ == "__main__":
     """ """
-    package.log()
-    package.build_all()
-    package.structure.pip_install_editable()
-    # package.structure.poetry_build()
-    # package.structure.twine_upload()
+    builder.log()
+    builder.build_all()
+    builder.structure.pip_install_editable()
+    # builder.structure.poetry_build()
+    # builder.structure.twine_upload()

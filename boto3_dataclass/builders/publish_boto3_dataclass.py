@@ -2,6 +2,7 @@
 
 import dataclasses
 
+from .._version import __version__
 from ..templates.api import tpl_enum
 from ..structures.api import PyProjectStructure
 
@@ -19,6 +20,17 @@ def gen_code_init_py(self):
 @dataclasses.dataclass
 class Boto3DataclassBuilder(PyProjectBuilder):
     structure: "PyProjectStructure" = dataclasses.field()
+
+    @classmethod
+    def new(
+        cls,
+        version: str = __version__,
+        package_name: str = "boto3_dataclass",
+    ):
+        return cls(
+            version=version,
+            structure=PyProjectStructure(package_name=package_name),
+        )
 
     def log(self, ith: int | None = None):
         path = f"file://{self.structure.dir_repo}"
