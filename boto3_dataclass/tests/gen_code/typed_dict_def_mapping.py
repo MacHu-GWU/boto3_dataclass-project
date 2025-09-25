@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from boto3_dataclass.gen_code.gen_code import (
+from boto3_dataclass.models.typed_dict import (
     TypedDictFieldAnnotation,
     TypedDictField,
     TypedDictDef,
-    TypedDictDefMapping,
+    TypedDefsModule,
 )
 
-defs = [
+tdds = [
     TypedDictDef(
         name="SimpleModelTypeDef",
         fields=[
@@ -181,4 +181,4 @@ defs = [
     ),
 ]
 
-tddm = TypedDictDefMapping(defs=defs)
+tdm = TypedDefsModule(tdds=tdds)

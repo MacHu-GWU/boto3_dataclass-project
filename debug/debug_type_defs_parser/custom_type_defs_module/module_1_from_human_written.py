@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+- 不要对 NotRequired 和 Required 进行特殊处理, 不要用 get() 方法获得 None, 它跟
+    Optional 的含义是不同的. 如果尝试获得一个 NotRequired 的属性, 那么就该抛出 KeyError 异常.
+- 对于 Optional, 因为说明这个 field 必须存在, 但是值可以是 None, 所以直接访问即可.
+- 对于 List 使用 make_many 方法, 对于单个使用 make_one 方法.
+"""
+
 import typing as T
 import dataclasses
 from functools import cached_property
@@ -8,13 +15,18 @@ if T.TYPE_CHECKING:  # pragma: no cover
     from boto3_dataclass.tests.gen_code import type_defs
 
 
+def field(name: str):
+    def getter(self):
+        return self.boto3_raw_data[name]
+
+    return cached_property(getter)
+
+
 @dataclasses.dataclass(frozen=True)
 class SimpleModel:
     boto3_raw_data: "type_defs.SimpleModelTypeDef" = dataclasses.field()
 
-    @cached_property
-    def attr1(self):  # pragma: no cover
-        return self.boto3_raw_data["attr1"]
+    attr1 = field("attr1")
 
     @classmethod
     def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleModelTypeDef"]):
@@ -23,62 +35,77 @@ class SimpleModel:
         return cls(boto3_raw_data=boto3_raw_data)
 
     @classmethod
-    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelTypeDef"]]):
+    def make_many(
+        cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelTypeDef"]]
+    ):
         if boto3_raw_data_list is None:
             return None
-        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
+        return [
+            cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list
+        ]
+
 
 @dataclasses.dataclass(frozen=True)
 class SimpleModelWithSubscript:
     boto3_raw_data: "type_defs.SimpleModelWithSubscriptTypeDef" = dataclasses.field()
 
-    @cached_property
-    def attr1(self):  # pragma: no cover
-        return self.boto3_raw_data["attr1"]
-
-    @cached_property
-    def attr2(self):  # pragma: no cover
-        return self.boto3_raw_data["attr2"]
-
-    @cached_property
-    def attr3(self):  # pragma: no cover
-        return self.boto3_raw_data["attr3"]
+    attr1 = field("attr1")
+    attr2 = field("attr2")
+    attr3 = field("attr3")
 
     @classmethod
-    def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleModelWithSubscriptTypeDef"]):
+    def make_one(
+        cls, boto3_raw_data: T.Optional["type_defs.SimpleModelWithSubscriptTypeDef"]
+    ):
         if boto3_raw_data is None:
             return None
         return cls(boto3_raw_data=boto3_raw_data)
 
     @classmethod
-    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelWithSubscriptTypeDef"]]):
+    def make_many(
+        cls,
+        boto3_raw_data_list: T.Optional[
+            T.Iterable["type_defs.SimpleModelWithSubscriptTypeDef"]
+        ],
+    ):
         if boto3_raw_data_list is None:
             return None
-        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
+        return [
+            cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list
+        ]
+
 
 @dataclasses.dataclass(frozen=True)
 class SimpleModelWithNestedSubscript:
-    boto3_raw_data: "type_defs.SimpleModelWithNestedSubscriptTypeDef" = dataclasses.field()
+    boto3_raw_data: "type_defs.SimpleModelWithNestedSubscriptTypeDef" = (
+        dataclasses.field()
+    )
 
-    @cached_property
-    def attr1(self):  # pragma: no cover
-        return self.boto3_raw_data["attr1"]
-
-    @cached_property
-    def attr2(self):  # pragma: no cover
-        return self.boto3_raw_data["attr2"]
+    attr1 = field("attr1")
+    attr2 = field("attr2")
 
     @classmethod
-    def make_one(cls, boto3_raw_data: T.Optional["type_defs.SimpleModelWithNestedSubscriptTypeDef"]):
+    def make_one(
+        cls,
+        boto3_raw_data: T.Optional["type_defs.SimpleModelWithNestedSubscriptTypeDef"],
+    ):
         if boto3_raw_data is None:
             return None
         return cls(boto3_raw_data=boto3_raw_data)
 
     @classmethod
-    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleModelWithNestedSubscriptTypeDef"]]):
+    def make_many(
+        cls,
+        boto3_raw_data_list: T.Optional[
+            T.Iterable["type_defs.SimpleModelWithNestedSubscriptTypeDef"]
+        ],
+    ):
         if boto3_raw_data_list is None:
             return None
-        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
+        return [
+            cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list
+        ]
+
 
 @dataclasses.dataclass(frozen=True)
 class SimpleContainer:
@@ -127,22 +154,23 @@ class SimpleContainer:
         return cls(boto3_raw_data=boto3_raw_data)
 
     @classmethod
-    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleContainerTypeDef"]]):
+    def make_many(
+        cls,
+        boto3_raw_data_list: T.Optional[T.Iterable["type_defs.SimpleContainerTypeDef"]],
+    ):
         if boto3_raw_data_list is None:
             return None
-        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
+        return [
+            cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list
+        ]
+
 
 @dataclasses.dataclass(frozen=True)
 class User:
     boto3_raw_data: "type_defs.UserTypeDef" = dataclasses.field()
 
-    @cached_property
-    def id(self):  # pragma: no cover
-        return self.boto3_raw_data["id"]
-
-    @cached_property
-    def name(self):  # pragma: no cover
-        return self.boto3_raw_data["name"]
+    id = field("id")
+    name = field("name")
 
     @cached_property
     def attr1(self):  # pragma: no cover
@@ -187,7 +215,11 @@ class User:
         return cls(boto3_raw_data=boto3_raw_data)
 
     @classmethod
-    def make_many(cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.UserTypeDef"]]):
+    def make_many(
+        cls, boto3_raw_data_list: T.Optional[T.Iterable["type_defs.UserTypeDef"]]
+    ):
         if boto3_raw_data_list is None:
             return None
-        return [cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list]
+        return [
+            cls(boto3_raw_data=boto3_raw_data) for boto3_raw_data in boto3_raw_data_list
+        ]

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-# from module_human_written import (
-# from module_generated import (
-from module_parsed_then_generated import (
+# from module_1_from_human_written import (
+# from module_2_from_pre_build_type_defs_module import (
+from module_3_from_parser import (
     SimpleModel,
     SimpleModelWithSubscript,
     SimpleModelWithNestedSubscript,
