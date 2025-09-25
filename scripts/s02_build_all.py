@@ -6,7 +6,6 @@ We use this script to build all ``boto3_dataclass_{service_name}`` package in
 """
 
 import boto3_dataclass.api as boto3_dc
-from boto3_dataclass._version import __version__
 
 if __name__ == "__main__":
-    boto3_dc.publish.PackageBuilder.parallel_build_all(version=__version__)
+    boto3_dc.builders.Boto3DataclassServiceBuilder.parallel_build_all()

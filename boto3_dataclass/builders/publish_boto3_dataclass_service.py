@@ -130,7 +130,7 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
     @classmethod
     def parallel_upload_all(
         cls,
-        version: str,
+        version: str = __version__,
         n_workers: int | None = None,
     ):
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):

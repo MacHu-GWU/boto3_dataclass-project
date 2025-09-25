@@ -11,3 +11,4 @@ from boto3_dataclass.builders.publish_boto3_dataclass_service import (
 
 if __name__ == "__main__":
     Boto3DataclassServiceBuilder.parallel_build_all()
+    # Boto3DataclassServiceBuilder.parallel_upload_all()
