@@ -4,7 +4,7 @@ import dataclasses
 
 from .._version import __version__
 from ..templates.api import tpl_enum
-from ..structures.api import PyProjectStructure
+from ..structures.api import PyProjectStructure, Boto3DataclassServiceStructure
 
 from .publish_pyproject import PyProjectBuilder
 
@@ -20,6 +20,7 @@ def gen_code_init_py(self):
 @dataclasses.dataclass
 class Boto3DataclassBuilder(PyProjectBuilder):
     structure: "PyProjectStructure" = dataclasses.field()
+    service_names: list[str] = dataclasses.field(default_factory=list)
 
     @classmethod
     def new(
@@ -27,9 +28,12 @@ class Boto3DataclassBuilder(PyProjectBuilder):
         version: str = __version__,
         package_name: str = "boto3_dataclass",
     ):
+        structure_list = Boto3DataclassServiceStructure.list_all()
+        service_names = [struct.service_name for struct in structure_list]
         return cls(
             version=version,
             structure=PyProjectStructure(package_name=package_name),
+            service_names=service_names,
         )
 
     def log(self, ith: int | None = None):

@@ -76,7 +76,7 @@ class Boto3DataclassServiceStructure(PyProjectStructure):
         return self.dir_mypy_boto3_package / "client.pyi"
 
     @classmethod
-    def list_all(cls) -> list["Boto3DataclassService"]:
+    def list_all(cls) -> list["Boto3DataclassServiceStructure"]:
         """
         List all available mypy_boto3_* stubs in the site-packages directory.
 

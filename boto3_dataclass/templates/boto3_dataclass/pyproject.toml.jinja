@@ -40,6 +40,16 @@ dependencies = [
     "{{ builder.structure.package_name_slug }}>={{ builder.sem_ver.lower_version }},<{{ builder.sem_ver.upper_version }}",
 ]
 
+[project.optional-dependencies]
+all = [
+{%- for service_name in builder.service_names %}
+    "boto3-dataclass-{{ service_name.replace("_", "-") }}>={{ builder.sem_ver.lower_version }},<{{ builder.sem_ver.upper_version }}",
+{%- endfor %}
+]
+{%- for service_name in builder.service_names %}
+{{ service_name.replace("_", "-") }} = ["boto3-dataclass-{{ service_name.replace("_", "-") }}>={{ builder.sem_ver.lower_version }},<{{ builder.sem_ver.upper_version }}"]
+{%- endfor %}
+
 # Quick Links
 [project.urls]
 Homepage = "https://github.com/MacHu-GWU/boto3_dataclass-project"
