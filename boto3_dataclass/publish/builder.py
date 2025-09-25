@@ -29,15 +29,24 @@ class PackageBuilder:
     service: Service
     version: str
 
-    def setup(self):
+    def log(self, ith: int | None = None):
         path = f"file://{self.service.dir_boto3_dataclass_repo}"
-        print(f"Work on: {path}")
+        if ith:
+            seq = f"{ith} "
+        else:
+            seq = ""
+        print(f"========== Work on {seq}{self.service.service_name}: {path}")
+
+    def setup(self):
         shutil.rmtree(self.service.dir_boto3_dataclass_repo, ignore_errors=True)
 
     def build_all(self):
+        self.setup()
         self.build_type_defs()
         self.build_init_py()
         self.build_pyproject_toml()
+        self.build_README_rst()
+        self.build_LICENSE_txt()
 
     def build_type_defs(self):
         # Parse mypy_boto3_{service_name}/type_defs.pyi
@@ -54,17 +63,33 @@ class PackageBuilder:
         # Write to file
         write(path, code)
 
+    def _build_by_package(
+        self,
+        path,
+        template,
+    ):
+        code = template.render(package=self)
+        write(path, code)
+
     def build_init_py(self):
         path = self.service.path_boto3_dataclass_init_py
         tpl = tpl_enum.boto3_dataclass_service__package____init___py
-        code = tpl.render(package=self)
-        write(path, code)
+        self._build_by_package(path, tpl)
 
     def build_pyproject_toml(self):
         path = self.service.path_boto3_dataclass_pyproject_toml
         tpl = tpl_enum.boto3_dataclass_service__pyproject_toml
-        code = tpl.render(package=self)
-        write(path, code)
+        self._build_by_package(path, tpl)
+
+    def build_README_rst(self):
+        path = self.service.path_boto3_dataclass_README_rst
+        tpl = tpl_enum.boto3_dataclass_service__README_rst
+        self._build_by_package(path, tpl)
+
+    def build_LICENSE_txt(self):
+        path = self.service.dir_boto3_dataclass_repo / "LICENSE.txt"
+        tpl = tpl_enum.boto3_dataclass_service__LICENSE_txt
+        self._build_by_package(path, tpl)
 
     @classmethod
     def list_all(
@@ -81,8 +106,7 @@ class PackageBuilder:
         n_workers: int | None = None,
     ):
         def main(ith: int, package: "PackageBuilder"):
-            path = f"file://{package.service.dir_boto3_dataclass_repo}"
-            print(f"========== {ith} {package.service.service_name}: {path} ==========")
+            package.log(ith)
             package.build_all()
 
         package_list = cls.list_all(version=version)

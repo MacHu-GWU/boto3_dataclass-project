@@ -16,6 +16,10 @@ class TemplateEnum:
         return load_template("template_enum.py.jinja")
     
     @cached_property
+    def boto3_dataclass_service__README_rst(self):
+        return load_template("boto3_dataclass_service/README.rst.jinja")
+    
+    @cached_property
     def boto3_dataclass_service__LICENSE_txt(self):
         return load_template("boto3_dataclass_service/LICENSE.txt.jinja")
     

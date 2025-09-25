@@ -137,6 +137,13 @@ class Service:
         return self.dir_boto3_dataclass_repo / "pyproject.toml"
 
     @cached_property
+    def path_boto3_dataclass_README_rst(self) -> Path:
+        """
+        Example: ``build/repos/boto3_dataclass_ec2-project/README.rst``
+        """
+        return self.dir_boto3_dataclass_repo / "README.rst"
+
+    @cached_property
     def path_boto3_dataclass_init_py(self) -> Path:
         """
         Example: ``build/repos/boto3_dataclass_ec2-project/boto3_dataclass_ec2/__init__.py``
