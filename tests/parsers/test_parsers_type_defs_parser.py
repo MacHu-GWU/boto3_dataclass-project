@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from boto3_dataclass.parsers.type_defs_parser import TypedDefsModuleParser
-from boto3_dataclass.structures.service import (
-    Service,
+from boto3_dataclass.structures.boto3_dataclass_service import (
+    Boto3DataclassServiceStructure,
 )
 
 
 class TestTypedDefsModuleParser:
     def test_parse(self):
-        service = Service(service_name="iam")
+        struct = Boto3DataclassServiceStructure(package_name="boto3_dataclass_iam")
         tdm_parser = TypedDefsModuleParser(
-            path_stub_file=service.path_mypy_boto3_type_defs_pyi,
+            path_stub_file=struct.path_mypy_boto3_type_defs_pyi,
         )
         tdm = tdm_parser.parse()
 
