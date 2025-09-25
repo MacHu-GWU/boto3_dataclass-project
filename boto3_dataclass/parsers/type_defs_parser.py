@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
+Parse ``mypy_boto3_${aws_service}/type_defs.pyi`` stub file to extract all TypedDict definitions.
+
 .. note::
 
     这个模块中的所有 ``*Parser`` 类都使用了 Command Pattern, 也就是虽然是一个类,
@@ -30,13 +32,6 @@ from .base import StubFileParser
 
 # DEBUG = True
 DEBUG = False
-
-
-def parse_ast(path: Path) -> ast.Module:
-    """
-    解析指定路径的 Python 文件内容为 AST 模块.
-    """
-    return ast.parse(path.read_text(encoding="utf-8"))
 
 
 @dataclasses.dataclass
