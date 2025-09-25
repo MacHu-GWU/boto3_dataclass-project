@@ -148,10 +148,11 @@ class PackageBuilder:
             subprocess.run(args)
 
     def twine_upload(self):
-        twine.commands.upload.upload(
-            upload_settings=config.twine_upload_settings,
-            dists=self.service.dist_files,
-        )
+        with temp_cwd(self.service.dir_boto3_dataclass_repo):
+            twine.commands.upload.upload(
+                upload_settings=config.twine_upload_settings,
+                dists=self.service.dist_files,
+            )
 
     def pip_install_editable(self):
         dir_repo = self.service.dir_boto3_dataclass_repo

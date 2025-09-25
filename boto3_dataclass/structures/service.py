@@ -179,4 +179,6 @@ class Service:
         Example: ``build/repos/boto3_dataclass_ec2-project/dist/boto3_dataclass_ec2-0.1.0-py3-none-any.whl``
         """
         dist_dir = self.dir_boto3_dataclass_repo / "dist"
-        return [str(p) for p in dist_dir.iterdir()]
+        return [
+            str(p) for p in dist_dir.iterdir() if p.name.startswith("boto3_dataclass_")
+        ]
