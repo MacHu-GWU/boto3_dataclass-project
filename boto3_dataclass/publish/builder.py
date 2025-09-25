@@ -3,6 +3,7 @@
 import shutil
 import subprocess
 import dataclasses
+from functools import cached_property
 
 import mpire
 from black import format_file_contents, Mode
@@ -11,11 +12,13 @@ import twine.commands.upload
 from twine.exceptions import TwineException
 from ..vendor.better_pathlib import temp_cwd
 
-from ..utils import write
-from ..templates.template_enum import tpl_enum
-from ..structures.service import Service
-from ..parsers.type_defs_parser import TypedDefsModuleParser
-from ..parsers.client_parser import ClientModuleParser
+from ..utils import write, SemVer
+from ..paths import path_enum
+from ..config import config
+from ..templates.api import tpl_enum
+from ..structures.api import Service
+from ..parsers.api import TypedDefsModuleParser
+from ..parsers.api import ClientModuleParser
 
 
 def black_format_code(code: str) -> str:
@@ -34,6 +37,10 @@ def gen_code_init_py(self):
 class PackageBuilder:
     service: Service = dataclasses.field()
     version: str = dataclasses.field()
+
+    @cached_property
+    def sem_ver(self) -> SemVer:
+        return SemVer.parse(self.version)
 
     def log(self, ith: int | None = None):
         path = f"file://{self.service.dir_boto3_dataclass_repo}"
@@ -142,12 +149,17 @@ class PackageBuilder:
 
     def twine_upload(self):
         twine.commands.upload.upload(
-            twine.settings.Settings(
-                username=os.getenv("PYPI_USERNAME"),
-                password=os.getenv("PYPI_PASSWORD"),
-                non_interactive=True,
-                disable_progress_bar=True,
-                skip_existing=True,
-            ),
-            [path.as_posix()],
+            upload_settings=config.twine_upload_settings,
+            dists=self.service.dist_files,
         )
+
+    def pip_install_editable(self):
+        dir_repo = self.service.dir_boto3_dataclass_repo
+        args = [
+            f"{path_enum.dir_venv_bin / 'pip'}",
+            "install",
+            "-e",
+            ".",
+        ]
+        with temp_cwd(dir_repo):
+            subprocess.run(args)

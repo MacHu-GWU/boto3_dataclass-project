@@ -37,14 +37,21 @@ class Service:
     service_name: str = dataclasses.field()
 
     @cached_property
+    def boto3_stubs_package_name(self) -> str:
+        return f"mypy_boto3_{self.service_name}"
+
+    @cached_property
+    def boto3_stubs_package_name_slug(self) -> str:
+        return self.boto3_stubs_package_name.replace("_", "-")
+
+    @cached_property
     def dir_mypy_boto3_package(self) -> Path:
         """
         Get the directory path for a given package or module name.
 
         Example: ``site-packages/mypy_boto3_ec2``
         """
-        folder = f"mypy_boto3_{self.service_name}"
-        return dir_site_packages / folder
+        return dir_site_packages / self.boto3_stubs_package_name
 
     @cached_property
     def path_mypy_boto3_literals_pyi(self) -> Path:
@@ -163,3 +170,13 @@ class Service:
         Example: ``build/repos/boto3_dataclass_ec2-project/boto3_dataclass_ec2/caster.py``
         """
         return self.dir_boto3_dataclass_package / "caster.py"
+
+    @cached_property
+    def dist_files(self) -> list[str]:
+        """
+        Get the list of distribution files in the dist directory.
+
+        Example: ``build/repos/boto3_dataclass_ec2-project/dist/boto3_dataclass_ec2-0.1.0-py3-none-any.whl``
+        """
+        dist_dir = self.dir_boto3_dataclass_repo / "dist"
+        return [str(p) for p in dist_dir.iterdir()]
