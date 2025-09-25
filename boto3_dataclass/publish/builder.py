@@ -10,6 +10,7 @@ from ..utils import write
 from ..templates.template_enum import tpl_enum
 from ..structures.service import Service
 from ..parsers.type_defs_parser import TypedDefsModuleParser
+from ..parsers.client_parser import ClientModuleParser
 
 
 def black_format_code(code: str) -> str:
@@ -43,10 +44,11 @@ class PackageBuilder:
     def build_all(self):
         self.setup()
         self.build_type_defs()
-        self.build_init_py()
-        self.build_pyproject_toml()
-        self.build_README_rst()
-        self.build_LICENSE_txt()
+        self.build_caster()
+        # self.build_init_py()
+        # self.build_pyproject_toml()
+        # self.build_README_rst()
+        # self.build_LICENSE_txt()
 
     def build_type_defs(self):
         # Parse mypy_boto3_{service_name}/type_defs.pyi
@@ -58,6 +60,17 @@ class PackageBuilder:
         type_defs_line = f"from {mypy_package_name} import type_defs"
         path = self.service.path_boto3_dataclass_type_defs_py
         code = tdm.gen_code(type_defs_line=type_defs_line)
+        # Format code with black
+        code = black_format_code(code)
+        # Write to file
+        write(path, code)
+
+    def build_caster(self):
+        path_stub_file = self.service.path_mypy_boto3_client_pyi
+        cm_parser = ClientModuleParser(path_stub_file=path_stub_file)
+        cm = cm_parser.parse()
+        path = self.service.path_boto3_dataclass_caster_py
+        code = cm.gen_code()
         # Format code with black
         code = black_format_code(code)
         # Write to file

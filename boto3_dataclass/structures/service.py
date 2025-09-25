@@ -158,8 +158,8 @@ class Service:
         return self.dir_boto3_dataclass_package / "type_defs.py"
 
     @cached_property
-    def path_boto3_dataclass_client_py(self) -> Path:
+    def path_boto3_dataclass_caster_py(self) -> Path:
         """
-        Example: ``build/repos/boto3_dataclass_ec2-project/boto3_dataclass_ec2/client.py``
+        Example: ``build/repos/boto3_dataclass_ec2-project/boto3_dataclass_ec2/caster.py``
         """
-        return self.dir_boto3_dataclass_package / "client.py"
+        return self.dir_boto3_dataclass_package / "caster.py"

@@ -8,8 +8,8 @@ from ..models.caster import CasterMethod, CasterModule
 
 from .base import StubFileParser
 
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
 
 @dataclasses.dataclass

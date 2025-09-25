@@ -2,7 +2,7 @@
 
 import typing as T
 
-from boto3_dataclass_{{ caster_module.service_name }} import type_defs as dc_td
+from . import type_defs as dc_td
 
 if T.TYPE_CHECKING:  # pragma: no cover
     from mypy_boto3_{{ caster_module.service_name }} import type_defs as bs_td

@@ -28,8 +28,8 @@ def pip_install():
 
 if __name__ == "__main__":
     """ """
-    # package.log()
-    # package.build_all()
+    package.log()
+    package.build_all()
     # pip_install()
 
     from boto3_dataclass_iam.type_defs import GetRoleResponse
