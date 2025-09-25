@@ -80,7 +80,7 @@ class TypedDictField:
 
     name: str = dataclasses.field()
     anno: TypedDictFieldAnnotation = dataclasses.field(
-        default_factory=TypedDictFieldAnnotation
+        default_factory=TypedDictFieldAnnotation,
     )
 
     def gen_code(self) -> str:
