@@ -1,0 +1,16 @@
+# -*- coding: utf-8 -*-
+
+import typing as T
+
+from boto3_dataclass_{{ caster_module.service_name }} import type_defs as dc_td
+
+if T.TYPE_CHECKING:  # pragma: no cover
+    from mypy_boto3_{{ caster_module.service_name }} import type_defs as bs_td
+
+
+class {{ caster_module.service_name|upper }}Caster:
+{% for caster_method in caster_module.cms %}
+{{ caster_method.gen_code() }}
+{% endfor %}
+
+{{ caster_module.service_name }}_caster = {{ caster_module.service_name|upper }}Caster()

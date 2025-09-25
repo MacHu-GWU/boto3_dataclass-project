@@ -1,0 +1,5 @@
+    def {{ caster_method.method_name }}(
+        self,
+        res: "bs_td.{{ caster_method.boto3_stubs_type_name }}",
+    ) -> "dc_td.{{ caster_method.boto3_dataclass_type_name }}":
+        return dc_td.{{ caster_method.boto3_dataclass_type_name }}.make_one(res)

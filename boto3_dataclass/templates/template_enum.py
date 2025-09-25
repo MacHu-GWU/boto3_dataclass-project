@@ -28,8 +28,16 @@ class TemplateEnum:
         return load_template("boto3_dataclass_service/pyproject.toml.jinja")
     
     @cached_property
+    def boto3_dataclass_service__package__caster_py(self):
+        return load_template("boto3_dataclass_service/package/caster.py.jinja")
+    
+    @cached_property
     def boto3_dataclass_service__package__typed_dict_def(self):
         return load_template("boto3_dataclass_service/package/typed_dict_def.jinja")
+    
+    @cached_property
+    def boto3_dataclass_service__package__caster_method(self):
+        return load_template("boto3_dataclass_service/package/caster_method.jinja")
     
     @cached_property
     def boto3_dataclass_service__package__typed_dict_field(self):
