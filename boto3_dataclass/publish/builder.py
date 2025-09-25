@@ -45,10 +45,10 @@ class PackageBuilder:
         self.setup()
         self.build_type_defs()
         self.build_caster()
-        # self.build_init_py()
-        # self.build_pyproject_toml()
-        # self.build_README_rst()
-        # self.build_LICENSE_txt()
+        self.build_init_py()
+        self.build_pyproject_toml()
+        self.build_README_rst()
+        self.build_LICENSE_txt()
 
     def build_type_defs(self):
         # Parse mypy_boto3_{service_name}/type_defs.pyi
