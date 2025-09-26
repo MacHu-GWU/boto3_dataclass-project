@@ -20,7 +20,7 @@ import time
 import dataclasses
 
 import mpire
-from tenacity import retry, stop_after_attempt, wait_fixed
+from tenacity import retry, stop_after_attempt, wait_fixed, wait_chain
 
 from .._version import __version__
 from ..utils import black_format_code, write
@@ -357,7 +357,13 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         :param limit: Maximum number of packages to upload
         """
 
-        @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+        @retry(
+            stop=stop_after_attempt(3),
+            wait=wait_chain(
+                wait_fixed(600),
+                wait_fixed(3600),
+            )
+        )
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
             """Worker function that builds a single service package."""
             package.log(ith)  # Log which package is being processed
