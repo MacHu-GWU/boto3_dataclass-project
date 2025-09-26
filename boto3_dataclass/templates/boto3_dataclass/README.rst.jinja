@@ -1,8 +1,95 @@
-Welcome to ``{{ builder.structure.package_name_slug }}`` Documentation
+
+.. image:: https://readthedocs.org/projects/boto3-dataclass/badge/?version=latest
+    :target: https://boto3-dataclass.readthedocs.io/en/latest/
+    :alt: Documentation Status
+
+.. image:: https://img.shields.io/pypi/v/boto3-dataclass.svg
+    :target: https://pypi.python.org/pypi/boto3-dataclass
+
+.. image:: https://img.shields.io/pypi/l/boto3-dataclass.svg
+    :target: https://pypi.python.org/pypi/boto3-dataclass
+
+.. image:: https://img.shields.io/pypi/pyversions/boto3-dataclass.svg
+    :target: https://pypi.python.org/pypi/boto3-dataclass
+
+.. image:: https://img.shields.io/badge/✍️_Release_History!--None.svg?style=social&logo=github
+    :target: https://github.com/MacHu-GWU/boto3_dataclass-project/blob/main/release-history.rst
+
+.. image:: https://img.shields.io/badge/⭐_Star_me_on_GitHub!--None.svg?style=social&logo=github
+    :target: https://github.com/MacHu-GWU/boto3_dataclass-project
+
+------
+
+.. image:: https://img.shields.io/badge/Link-API-blue.svg
+    :target: https://boto3-dataclass.readthedocs.io/en/latest/py-modindex.html
+
+.. image:: https://img.shields.io/badge/Link-Install-blue.svg
+    :target: `install`_
+
+.. image:: https://img.shields.io/badge/Link-GitHub-blue.svg
+    :target: https://github.com/MacHu-GWU/boto3_dataclass-project
+
+.. image:: https://img.shields.io/badge/Link-Submit_Issue-blue.svg
+    :target: https://github.com/MacHu-GWU/boto3_dataclass-project/issues
+
+.. image:: https://img.shields.io/badge/Link-Request_Feature-blue.svg
+    :target: https://github.com/MacHu-GWU/boto3_dataclass-project/issues
+
+.. image:: https://img.shields.io/badge/Link-Download-blue.svg
+    :target: https://pypi.org/pypi/boto3-dataclass#files
+
+🚀 boto3-dataclass: Transform Your boto3 Experience
 ==============================================================================
-- `Homepage <https://github.com/MacHu-GWU/boto3_dataclass-project>`_
-- `Documentation <https://boto3-dataclass.readthedocs.io/en/latest/>`_
-- `Repository <https://github.com/MacHu-GWU/boto3_dataclass-project>`_
-- `Issues <https://github.com/MacHu-GWU/boto3_dataclass-project/issues>`_
-- `Install <https://pypi.org/pypi/{{ builder.structure.package_name_slug }}>`_
-- `Download <https://pypi.org/pypi/{{ builder.structure.package_name_slug }}#files>`_
+.. image:: https://boto3-dataclass.readthedocs.io/en/latest/_static/boto3_dataclass-logo.png
+    :target: https://boto3-dataclass.readthedocs.io/en/latest/
+
+📚READ `FULL DOCUMENTATION HERE <https://boto3-dataclass.readthedocs.io/en/latest/>`_
+
+Welcome to **boto3-dataclass**! This library transforms boring boto3 dictionaries into beautiful, type-safe dataclasses with full autocomplete support. Say goodbye to ``response['Key']['SubKey']`` and hello to ``response.Key.SubKey`` with full IDE support!
+
+.. code-block:: python
+
+    import boto3
+    from boto3_dataclass_iam import iam_caster
+
+    # Use boto3 normally
+    iam_client = boto3.client("iam")
+    response = iam_client.get_role(RoleName="MyRole")
+
+    # Convert to structured dataclass
+    response = iam_caster.get_role(response)
+    # Now you get full IDE autocompletion and type safety!
+    # IDE shows available attributes
+
+.. image:: https://github.com/user-attachments/assets/7a76fde3-6786-48e6-a809-0a6bc3913d9b
+
+.. image:: https://github.com/user-attachments/assets/718bfed0-5aee-457f-b84a-f1221948dca1
+
+.. _install:
+
+📦 Installation
+------------------------------------------------------------------------------
+
+Install the service you need (e.g., for IAM, S3):
+
+.. code-block:: console
+
+    $ pip install boto3-dataclass[iam,s3]
+
+Or match with your boto3 version:
+
+.. code-block:: console
+
+    $ pip install "boto3-dataclass[iam,s3]>=1.40.0,<1.41.0"
+
+Or install everything at once:
+
+.. code-block:: console
+
+    $ pip install boto3-dataclass[all]  # Installs all AWS services
+
+To upgrade to latest version:
+
+.. code-block:: console
+
+    $ pip install --upgrade boto3-dataclass
