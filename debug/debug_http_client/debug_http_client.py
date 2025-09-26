@@ -17,20 +17,22 @@ async def main():
         make_url("boto3-dataclass-migration-hub-refactor-spaces"),
         make_url("boto3-dataclass-lex-runtime"),
     ]
+    results = await fetch_all_urls(urls)
     try:
         print(f"正在请求 {len(urls)} 个 URL...")
         results = await fetch_all_urls(urls)
         print(f"✅ 所有 {len(results)} 个请求都成功完成！")
-        # 打印结果摘要
-        for i, result in enumerate(results, 1):
-            print(f"--- {i}. {result.url}")
-            if result.error is None:
-                print(f"{result.response.text[:100] = }")
-            else:
-                print(f"{result.error = }")
+        return results
     except Exception as e:
         print(f"❌ 请求失败: {e}")
+        raise
 
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    results = asyncio.run(main())
+    for i, result in enumerate(results, 1):
+        print(f"--- {i}. {result.url}")
+        if result.error is None:
+            print(f"{result.response.text[:100] = }")
+        else:
+            print(f"{result.error = }")
