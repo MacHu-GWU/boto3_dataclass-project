@@ -13,6 +13,7 @@ from boto3_dataclass.pypi import PackageStatusLoader
 if __name__ == "__main__":
     package_status_loader = PackageStatusLoader()
     package_status_info = package_status_loader.read_cache()
+    # package_status_info = package_status_loader.refresh_cache()
     # package_status_info = None
 
     limit = None
