@@ -16,6 +16,7 @@ import dataclasses
 from functools import cached_property
 from pathlib import Path
 
+from ..constants import PACKAGE_NAME_PREFIX
 from .pyproject import PyProjectStructure
 
 dir_site_packages = Path(site.getsitepackages()[0])
@@ -27,9 +28,13 @@ class Boto3DataclassServiceStructure(PyProjectStructure):
     :param name: The name of the AWS Service or module.
     """
 
+    @classmethod
+    def new(cls, service_name: str):
+        return cls(package_name=f"{PACKAGE_NAME_PREFIX}_{service_name}")
+
     @cached_property
     def service_name(self) -> str:
-        return self.package_name.removeprefix("boto3_dataclass_")
+        return self.package_name.removeprefix(f"{PACKAGE_NAME_PREFIX}_")
 
     @cached_property
     def boto3_stubs_package_name(self) -> str:
@@ -90,8 +95,7 @@ class Boto3DataclassServiceStructure(PyProjectStructure):
                     and path.joinpath("type_defs.pyi").exists()
                 ):
                     service_name = path.name.removeprefix("mypy_boto3_")
-                    package_name = f"boto3_dataclass_{service_name}"
-                    service_list.append(cls(package_name=package_name))
+                    service_list.append(cls.new(service_name=service_name))
         return service_list
 
     @cached_property
