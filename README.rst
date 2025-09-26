@@ -54,6 +54,24 @@
 
 Welcome to **boto3-dataclass**! This library transforms boring boto3 dictionaries into beautiful, type-safe dataclasses with full autocomplete support. Say goodbye to ``response['Key']['SubKey']`` and hello to ``response.Key.SubKey`` with full IDE support!
 
+.. code-block:: python
+
+    import boto3
+    from boto3_dataclass_iam import iam_caster
+
+    # Use boto3 normally
+    iam_client = boto3.client("iam")
+    response = iam_client.get_role(RoleName="MyRole")
+
+    # Convert to structured dataclass
+    response = iam_caster.get_role(response)
+    # Now you get full IDE autocompletion and type safety!
+    # IDE shows available attributes
+
+.. image:: https://github.com/user-attachments/assets/7a76fde3-6786-48e6-a809-0a6bc3913d9b
+
+.. image:: https://github.com/user-attachments/assets/718bfed0-5aee-457f-b84a-f1221948dca1
+
 .. _install:
 
 📦 Installation
