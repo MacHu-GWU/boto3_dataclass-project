@@ -356,14 +356,7 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         :param package_status_info: Dict tracking package upload status
         :param limit: Maximum number of packages to upload
         """
-
-        @retry(
-            stop=stop_after_attempt(3),
-            wait=wait_chain(
-                wait_fixed(600),
-                wait_fixed(3600),
-            )
-        )
+        @retry(stop=stop_after_attempt(3), wait=wait_fixed(10))
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
             """Worker function that builds a single service package."""
             package.log(ith)  # Log which package is being processed
@@ -399,7 +392,15 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         :param limit: Maximum number of packages to upload
         """
 
-        @retry(stop=stop_after_attempt(3), wait=wait_fixed(10))
+        @retry(
+            stop=stop_after_attempt(5),
+            wait=wait_chain(
+                wait_fixed(600),
+                wait_fixed(1200),
+                wait_fixed(1800),
+                wait_fixed(3600),
+            )
+        )
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
             """Worker function that builds and uploads a single service package."""
             package.log(ith)  # Log which package is being processed
