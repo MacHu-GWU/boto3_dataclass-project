@@ -35,6 +35,6 @@ class Config:
 
 
 config = Config(
-    # repository_name="boto3dataclasspypi", # 🚀 Release to PyPI
-    repository_name="boto3dataclasstestpypi",  # 🧪 Release to TestPyPI
+    repository_name="boto3dataclasspypi", # 🚀 Release to PyPI
+    # repository_name="boto3dataclasstestpypi",  # 🧪 Release to TestPyPI
 )
