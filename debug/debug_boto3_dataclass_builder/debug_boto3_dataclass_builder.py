@@ -13,6 +13,6 @@ if __name__ == "__main__":
     """ """
     builder.log()
     builder.build_all()
-    builder.structure.pip_install_editable()
+    # builder.structure.pip_install_editable()
     # builder.structure.poetry_build()
     # builder.structure.twine_upload()
