@@ -25,24 +25,24 @@ def extract_package_name_from_url(url: str) -> str:
     return parts[-3]
 
 
-T_PACKAGE_STATUS_CACHE = dict[str, bool]
+T_PACKAGE_STATUS_INFO = dict[str, bool]
 
 
 @dataclasses.dataclass
-class PyPIStatus:
+class PackageStatusLoader:
     version: str = dataclasses.field(default=__version__)
 
     @cached_property
     def path_cache_file(self) -> Path:
         return path_enum.dir_cache / f"{self.version}.json"
 
-    def read_cache(self) -> T_PACKAGE_STATUS_CACHE:
+    def read_cache(self) -> T_PACKAGE_STATUS_INFO:
         path = self.path_cache_file
         if path.exists() is False:
             return self.refresh_cache()
         return json.loads(path.read_text(encoding="utf-8"))
 
-    def refresh_cache(self) -> T_PACKAGE_STATUS_CACHE:
+    def refresh_cache(self) -> T_PACKAGE_STATUS_INFO:
         results = asyncio.run(self.fetch_package_infos())
         cache_data = {}
         for result in results:
