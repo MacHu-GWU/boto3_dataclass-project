@@ -1,5 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""
+Python Project Structure Management.
+
+This module provides the :class:`PyProjectStructure` class that manages the file system structure,
+build operations, and distribution management for Python packages in the boto3-dataclass ecosystem.
+"""
+
 import shutil
 import subprocess
 import dataclasses
@@ -16,7 +23,31 @@ from ..config import config
 @dataclasses.dataclass
 class PyProjectStructure:
     """
-    A class representing a Python Project.
+    Manages the file system structure and operations for Python projects.
+
+    This class provides a complete abstraction for Python project management,
+    including directory structure, build operations, and distribution handling.
+    It's designed specifically for boto3-dataclass packages but can be used
+    for any Python project following standard conventions.
+
+    The class uses cached properties to efficiently manage file paths and
+    provides methods for common development operations like building,
+    uploading, and installing packages.
+
+    :param package_name: The Python package name (with underscores)
+
+    Properties:
+
+    - ``package_name_slug``: Package name in slug format (with hyphens)
+    - ``dir_repo``: Root directory for the project repository
+    - ``dir_package``: Directory containing the Python package
+    - ``path_*``: Various file paths within the project structure
+    - ``dist_files``: List of built distribution files
+
+    Example:
+        >>> project = PyProjectStructure(package_name="my_awesome_package")
+        >>> project.poetry_build()  # Build distributions
+        >>> project.twine_upload()  # Upload to PyPI
     """
 
     package_name: str = dataclasses.field()
@@ -52,7 +83,13 @@ class PyProjectStructure:
         )
 
     def remove_dir(self):
-        shutil.rmtree(self.dir_repo, ignore_errors=True)
+        """
+        Remove the entire project repository directory.
+
+        This method safely removes the project's build directory and all its contents.
+        It's typically used for cleaning up before a fresh build.
+        """
+        shutil.rmtree(self.dir_repo, ignore_errors=True)  # Safely remove directory tree
 
     @cached_property
     def dir_package(self) -> Path:
@@ -96,6 +133,12 @@ class PyProjectStructure:
         """
         Get the list of distribution files in the dist directory.
 
+        Scans the project's dist/ directory for built distribution files
+        (both wheel and source distributions) that belong to this package.
+
+        Returns:
+            List of absolute paths to distribution files as strings
+
         Example::
 
             [
@@ -105,29 +148,67 @@ class PyProjectStructure:
         """
         dists = list()
         dir_dist = self.dir_repo / "dist"
+
+        # Iterate through all files in the dist directory
         for p in dir_dist.iterdir():
+            # Only include files that match our package name and are valid distribution types
             if p.name.startswith(self.package_name) and p.suffix in {".whl", ".tar.gz"}:
-                dists.append(str(p))
+                dists.append(str(p))  # Convert Path to string for Twine compatibility
+
         return dists
 
     def poetry_build(self):
+        """
+        Build the package using Poetry.
+
+        Creates both source distribution (.tar.gz) and wheel (.whl) files
+        in the project's dist/ directory using Poetry's build command.
+
+        Raises:
+            subprocess.CalledProcessError: If the Poetry build command fails
+        """
         args = ["poetry", "build"]
+        # Change to project directory for build operation
         with temp_cwd(self.dir_repo):
-            subprocess.run(args, check=True)
+            subprocess.run(args, check=True)  # Execute poetry build with error checking
 
     def twine_upload(self):
+        """
+        Upload distribution files to PyPI using Twine.
+
+        Uploads all distribution files (both source and wheel) found in the
+        dist/ directory to the configured PyPI repository using Twine.
+
+        :raises:
+            twine.exceptions.TwineException: If upload fails
+            requests.exceptions.RequestException: If network error occurs
+        """
+        # Change to project directory for upload operation
         with temp_cwd(self.dir_repo):
             twine.commands.upload.upload(
-                upload_settings=config.twine_upload_settings,
-                dists=self.dist_files,
+                upload_settings=config.twine_upload_settings,  # Use configured credentials/settings
+                dists=self.dist_files,  # Upload all built distribution files
             )
 
     def pip_install_editable(self):
+        """
+        Install the package in editable mode for development.
+
+        Installs the package in development mode (editable install) using pip.
+        This allows changes to the source code to be immediately reflected
+        without reinstalling the package.
+
+        Raises:
+            subprocess.CalledProcessError: If the pip install command fails
+        """
+        # Use pip from project's virtual environment
+        path_bin_pip = path_enum.dir_venv_bin / "pip"
         args = [
-            f"{path_enum.dir_venv_bin / 'pip'}",
+            f"{path_bin_pip}",
             "install",
-            "-e",
-            ".",
+            "-e",  # Editable/development mode flag
+            ".",  # Install current directory
         ]
+        # Change to project directory for installation
         with temp_cwd(self.dir_repo):
-            subprocess.run(args, check=True)
+            subprocess.run(args, check=True)  # Execute pip install with error checking
