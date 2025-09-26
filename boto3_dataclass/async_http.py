@@ -6,7 +6,11 @@ import asyncio
 
 
 @dataclasses.dataclass
-class HttpRequestResult:
+class HttpResult:
+    """
+    Result of an HTTP request.
+    """
+
     url: str = dataclasses.field()
     response: httpx.Response | None = dataclasses.field(init=False)
     error: Exception | None = dataclasses.field(init=False)
@@ -15,7 +19,7 @@ class HttpRequestResult:
 async def fetch_all_urls(
     urls: list[str],
     timeout: float = 30.0,
-) -> list[HttpRequestResult]:
+) -> list[HttpResult]:
     """
     Send multiple HTTP GET requests asynchronously and ensure all return status code 200.
 
@@ -45,16 +49,16 @@ async def fetch_all_urls(
 async def make_request(
     client: httpx.AsyncClient,
     url: str,
-) -> HttpRequestResult:
+) -> HttpResult:
     """
     Send single HTTP GET request
 
     :param client: httpx Async Client
     :param url: URL to request
 
-    :returns: A :class:`HttpRequestResult` object
+    :returns: A :class:`HttpResult` object
     """
-    result = HttpRequestResult(url=url)
+    result = HttpResult(url=url)
     try:
         response = await client.get(url)
         result.response = response
