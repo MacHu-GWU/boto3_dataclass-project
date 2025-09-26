@@ -19,6 +19,7 @@ import typing as T
 import dataclasses
 
 import mpire
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 from .._version import __version__
 from ..utils import black_format_code, write
@@ -222,25 +223,16 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         ]
 
     @classmethod
-    def _parallel_run(
+    def list_filtered_sorted_all(
         cls,
-        func: T.Callable[[int, "Boto3DataclassServiceBuilder"], None],
         version: str = __version__,
-        n_workers: int | None = None,
-        start_method: str = "fork",
         package_status_info: T.Optional["T_PACKAGE_STATUS_INFO"] = None,
         limit: int | None = None,
-    ):
+    ) -> list["Boto3DataclassServiceBuilder"]:
         """
-        Execute a function in parallel across multiple service packages.
+        List, filter, and sort all available service packages.
 
-        This is a private method that handles the parallel execution infrastructure
-        for batch operations on service packages.
-
-        :param func: Function to execute for each package (takes index and builder)
         :param version: Package version for builders
-        :param n_workers: Number of worker processes (None for auto-detection)
-        :param start_method: Multiprocessing start method ("fork" or "threading")
         :param package_status_info: Dict of package statuses to filter completed packages
         :param limit: Maximum number of packages to process
         """
@@ -270,6 +262,36 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         if limit is not None:
             sorted_package_list = sorted_package_list[:limit]
 
+        return sorted_package_list
+
+    @classmethod
+    def _parallel_run(
+        cls,
+        func: T.Callable[[int, "Boto3DataclassServiceBuilder"], None],
+        version: str = __version__,
+        n_workers: int | None = None,
+        start_method: str = "fork",
+        package_status_info: T.Optional["T_PACKAGE_STATUS_INFO"] = None,
+        limit: int | None = None,
+    ):
+        """
+        Execute a function in parallel across multiple service packages.
+
+        This is a private method that handles the parallel execution infrastructure
+        for batch operations on service packages.
+
+        :param func: Function to execute for each package (takes index and builder)
+        :param version: Package version for builders
+        :param n_workers: Number of worker processes (None for auto-detection)
+        :param start_method: Multiprocessing start method ("fork" or "threading")
+        :param package_status_info: Dict of package statuses to filter completed packages
+        :param limit: Maximum number of packages to process
+        """
+        sorted_package_list = cls.list_filtered_sorted_all(
+            version=version,
+            package_status_info=package_status_info,
+            limit=limit,
+        )
         # Create task list with sequence numbers for logging
         tasks = [
             {"ith": i, "package": package}
@@ -318,7 +340,7 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         )
 
     @classmethod
-    def parallel_upload_all(
+    def parallel_poetry_build_all(
         cls,
         version: str = __version__,
         n_workers: int | None = None,
@@ -326,10 +348,7 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         limit: int | None = None,
     ):
         """
-        Build and upload all boto3 dataclass service packages to PyPI in parallel.
-
-        This method handles the complete build-and-upload pipeline for multiple
-        service packages, using threading for I/O-bound upload operations.
+        Build all boto3 dataclass service packages with Poetry in parallel.
 
         :param version: Package version for all built packages
         :param n_workers: Number of worker threads (None for auto-detection)
@@ -337,17 +356,56 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         :param limit: Maximum number of packages to upload
         """
 
+        @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
-            """Worker function that builds and uploads a single service package."""
+            """Worker function that builds a single service package."""
             package.log(ith)  # Log which package is being processed
             package.structure.poetry_build()  # Build the package with Poetry
-            package.structure.twine_upload()  # Upload to PyPI with twine
+            if len(package.structure.dist_files) == 2:
+                raise ValueError(
+                    f"{package.structure.dir_dist} doesn't have exactly 2 files",
+                )
 
         cls._parallel_run(
             version=version,
             func=main,
             n_workers=n_workers,
-            start_method="threading",  # Use threading for I/O-bound upload operations
+            start_method="fork",  # Use fork for CPU-intensive build operations
             package_status_info=package_status_info,
             limit=limit,
         )
+
+    @classmethod
+    def sequence_upload_all(
+        cls,
+        version: str = __version__,
+        package_status_info: T.Optional["T_PACKAGE_STATUS_INFO"] = None,
+        limit: int | None = None,
+    ):
+        """
+        Build and upload all boto3 dataclass service packages to PyPI in sequence.
+        We don't do parallel upload to avoid hitting PyPI rate limits.
+
+        :param version: Package version for all built packages
+        :param n_workers: Number of worker threads (None for auto-detection)
+        :param package_status_info: Dict tracking package upload status
+        :param limit: Maximum number of packages to upload
+        """
+
+        # @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+        def main(ith: int, package: "Boto3DataclassServiceBuilder"):
+            """Worker function that builds and uploads a single service package."""
+            package.log(ith)  # Log which package is being processed
+            package.structure.twine_upload()  # Upload to PyPI with twine
+
+        sorted_package_list = cls.list_filtered_sorted_all(
+            version=version,
+            package_status_info=package_status_info,
+            limit=limit,
+        )
+        tasks = [
+            {"ith": i, "package": package}
+            for i, package in enumerate(sorted_package_list, start=1)
+        ]
+        for task in tasks:
+            main(**task)

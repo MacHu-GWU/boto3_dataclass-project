@@ -13,12 +13,13 @@ import dataclasses
 from pathlib import Path
 from functools import cached_property
 
+import requests.exceptions
 import twine.commands.upload
+from rich import print as rprint
 from ..vendor.better_pathlib import temp_cwd
 
 from ..paths import path_enum
 from ..config import config
-
 
 @dataclasses.dataclass
 class PyProjectStructure:
@@ -129,6 +130,15 @@ class PyProjectStructure:
         return self.dir_repo / "LICENSE.txt"
 
     @cached_property
+    def dir_dist(self) -> Path:
+        """
+        Get the distribution directory path for built packages.
+
+        Example: ``build/repos/boto3_dataclass_ec2-project/dist``
+        """
+        return self.dir_repo / "dist"
+
+    @cached_property
     def dist_files(self) -> list[str]:
         """
         Get the list of distribution files in the dist directory.
@@ -147,10 +157,8 @@ class PyProjectStructure:
             ]
         """
         dists = list()
-        dir_dist = self.dir_repo / "dist"
-
         # Iterate through all files in the dist directory
-        for p in dir_dist.iterdir():
+        for p in self.dir_dist.iterdir():
             # Only include files that match our package name and are valid distribution types
             if p.name.startswith(self.package_name) and p.suffix in {".whl", ".tar.gz"}:
                 dists.append(str(p))  # Convert Path to string for Twine compatibility
@@ -170,7 +178,7 @@ class PyProjectStructure:
         args = ["poetry", "build"]
         # Change to project directory for build operation
         with temp_cwd(self.dir_repo):
-            subprocess.run(args, check=True)  # Execute poetry build with error checking
+            subprocess.run(args, cwd=self.dir_repo, check=True)  # Execute poetry build with error checking
 
     def twine_upload(self):
         """
@@ -185,10 +193,21 @@ class PyProjectStructure:
         """
         # Change to project directory for upload operation
         with temp_cwd(self.dir_repo):
-            twine.commands.upload.upload(
-                upload_settings=config.twine_upload_settings,  # Use configured credentials/settings
-                dists=self.dist_files,  # Upload all built distribution files
-            )
+            try:
+                twine.commands.upload.upload(
+                    upload_settings=config.twine_upload_settings,  # Use configured credentials/settings
+                    dists=self.dist_files,  # Upload all built distribution files
+                )
+            except requests.exceptions.HTTPError as e:
+                print(f"response.headers:")
+                for k, v in e.response.headers.items():
+                    print(f"{k} = {v}")
+                print(f"response.text:")
+                print(e.response.text)
+                raise
+            except Exception as e:
+                print(f"{type(e) = }")
+                raise
 
     def pip_install_editable(self):
         """
@@ -211,4 +230,4 @@ class PyProjectStructure:
         ]
         # Change to project directory for installation
         with temp_cwd(self.dir_repo):
-            subprocess.run(args, check=True)  # Execute pip install with error checking
+            subprocess.run(args, cwd=self.dir_repo, check=True)  # Execute pip install with error checking
