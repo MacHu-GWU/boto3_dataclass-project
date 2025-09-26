@@ -13,26 +13,6 @@ The main components include:
 - Creating caster utilities for converting boto3 responses to dataclasses
 - Generating package configuration files (pyproject.toml, README, LICENSE)
 - Parallel processing for bulk package building and uploading
-
-Example:
-
-    >>> builder = Boto3DataclassServiceBuilder(version="1.0.0", structure=structure)
-    >>> builder.build_all()  # Build all package components
-    >>> builder.structure.poetry_build()  # Build the package
-    >>> builder.structure.twine_upload()  # Upload to PyPI
-
-Example package structure::
-
-    build
-    |-- repos
-        |-- boto3_dataclass_{service_name}-project
-            |-- boto3_dataclass_{service_name}
-                |-- __init__.py
-                |-- caster.py
-                |-- type_defs.py
-            |-- LICENSE.txt
-            |-- README.rst
-            |-- pyproject.toml
 """
 
 import typing as T
@@ -65,14 +45,28 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
     The builder transforms mypy-boto3 type stubs into usable dataclass packages that
     provide type-safe wrappers around boto3 service responses.
 
-    Attributes:
-        structure: The service structure containing paths and metadata for the package
-        version: Package version (inherited from PyProjectBuilder)
+    :param version: Package version (inherited from PyProjectBuilder)
+    :param structure: The service structure containing paths and metadata for the package
 
     Example:
         >>> structure = Boto3DataclassServiceStructure.new("s3")
         >>> builder = Boto3DataclassServiceBuilder(version="1.0.0", structure=structure)
-        >>> builder.build_all()
+        >>> builder.build_all() # Build all package components at build/repos/boto3_dataclass_s3-project
+        >>> builder.structure.poetry_build()  # Build the package
+        >>> builder.structure.twine_upload()  # Upload to PyPI
+
+    Example package structure::
+
+        build
+        |-- repos
+            |-- boto3_dataclass_{service_name}-project
+                |-- boto3_dataclass_{service_name}
+                    |-- __init__.py
+                    |-- caster.py
+                    |-- type_defs.py
+                |-- LICENSE.txt
+                |-- README.rst
+                |-- pyproject.toml
     """
 
     structure: "Boto3DataclassServiceStructure" = dataclasses.field()
