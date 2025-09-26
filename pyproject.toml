@@ -9,7 +9,7 @@ name = "boto3_dataclass"
 # Currently, poetry 2.1.X doesn't support dynamic versioning
 # (Read https://packaging.python.org/en/latest/guides/writing-pyproject-toml/#version)
 # So this value has to be aligned with the one in ``boto3_dataclass/_version.py``
-version = "1.40.0.dev2"
+version = "1.40.0"
 description = "Transform boto3 dictionaries into type-safe dataclasses with full autocomplete support."
 # Read https://dev-exp-share.readthedocs.io/en/latest/search.html?q=Pick+An+Open+Source+License+For+Python+Project&check_keywords=yes&area=default
 # To pick a license and update the ``license``, ``classifier`` field in ``pyproject.toml``
@@ -46,7 +46,7 @@ dependencies = [
     "which_runtime>=0.1.1,<1.0.0", # detect current runtime environment
     "func-args>=1.0.1,<2.0.0",
     "boto3==1.40.0,<2.0.0",
-    "boto3-stubs[full]==1.40.0",
+    "boto3-stubs[all]==1.40.0",
     "jinja2>=3.1.0,<4.0.0", # templating engine
     "black>=25.1.0,<26.0.0", # code formatter
     "wheel>=0.45.0,<1.0.0", # build wheel package
