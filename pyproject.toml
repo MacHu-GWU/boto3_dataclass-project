@@ -53,6 +53,8 @@ dependencies = [
     "mpire>=2.10.2,<3.0.0", # multi-process parallel computing
     "twine>=6.0.0,<7.0.0", # distribute package to PyPI
     "httpx>=0.28.1,<1.0.0", # HTTP client
+    "tenacity>=9.0.0,<10.0.0", # retrying library
+    "rich>=13.8.1,<14.0.0", # pretty print
 ]
 
 # ------------------------------------------------------------------------------
@@ -70,7 +72,6 @@ dependencies = [
 dev = [
     "boto_session_manager>=1.8.1,<2.0.0", # manage AWS boto3 session
     "build>=1.2.1,<2.0.0", # build source distribution
-    "rich>=13.8.1,<14.0.0", # pretty print
 ]
 
 # ------------------------------------------------------------------------------
