@@ -16,6 +16,7 @@ The main components include:
 """
 
 import typing as T
+import time
 import dataclasses
 
 import mpire
@@ -392,7 +393,7 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         :param limit: Maximum number of packages to upload
         """
 
-        # @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+        @retry(stop=stop_after_attempt(3), wait=wait_fixed(10))
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
             """Worker function that builds and uploads a single service package."""
             package.log(ith)  # Log which package is being processed
@@ -409,3 +410,4 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         ]
         for task in tasks:
             main(**task)
+            time.sleep(10)  # Sleep to avoid hitting PyPI rate limits
