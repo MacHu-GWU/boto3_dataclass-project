@@ -63,6 +63,9 @@ class PathEnum:
     dir_docs_build_html = dir_project_root / "docs" / "build" / "html"
     # fmt: on
 
+    # PyPI Cache
+    dir_cache = dir_project_root / ".cache"
+
 
 path_enum = PathEnum()
 """
