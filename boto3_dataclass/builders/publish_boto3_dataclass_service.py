@@ -14,6 +14,9 @@ from ..parsers.api import ClientModuleParser
 
 from .publish_pyproject import PyProjectBuilder
 
+if T.TYPE_CHECKING:  # pragma: no cover
+    from ..pypi import T_PACKAGE_STATUS_INFO
+
 
 def gen_code_pyproject_toml(self):
     return tpl_enum.boto3_dataclass_service__pyproject_toml.render(package=self)
@@ -106,13 +109,29 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         func: T.Callable[[int, "Boto3DataclassServiceBuilder"], None],
         version: str = __version__,
         n_workers: int | None = None,
+        start_method: str = "fork",
+        package_status_info: T.Optional["T_PACKAGE_STATUS_INFO"] = None,
+        limit: int | None = None,
     ):
+        if package_status_info is None:
+            package_status_info = {}
         package_list = cls.list_all(version=version)
+        filtered_package_list = [
+            package
+            for package in package_list
+            if package_status_info.get(package.structure.package_name_slug, False)
+            is False
+        ]
+        sorted_package_list = list(
+            sorted(filtered_package_list, key=lambda p: p.structure.package_name_slug)
+        )
+        if limit is not None:
+            sorted_package_list = sorted_package_list[:limit]
         tasks = [
             {"ith": i, "package": package}
-            for i, package in enumerate(package_list, start=1)
+            for i, package in enumerate(sorted_package_list, start=1)
         ]
-        with mpire.WorkerPool(n_jobs=n_workers, start_method="fork") as pool:
+        with mpire.WorkerPool(n_jobs=n_workers, start_method=start_method) as pool:
             results = pool.map(func, tasks)
 
     @classmethod
@@ -120,22 +139,40 @@ class Boto3DataclassServiceBuilder(PyProjectBuilder):
         cls,
         version: str = __version__,
         n_workers: int | None = None,
+        package_status_info: T.Optional["T_PACKAGE_STATUS_INFO"] = None,
+        limit: int | None = None,
     ):
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
             package.log(ith)
             package.build_all()
 
-        cls._parallel_run(version=version, func=main, n_workers=n_workers)
+        cls._parallel_run(
+            version=version,
+            func=main,
+            n_workers=n_workers,
+            start_method="fork",
+            package_status_info=package_status_info,
+            limit=limit,
+        )
 
     @classmethod
     def parallel_upload_all(
         cls,
         version: str = __version__,
         n_workers: int | None = None,
+        package_status_info: T.Optional["T_PACKAGE_STATUS_INFO"] = None,
+        limit: int | None = None,
     ):
         def main(ith: int, package: "Boto3DataclassServiceBuilder"):
             package.log(ith)
             package.structure.poetry_build()
             package.structure.twine_upload()
 
-        cls._parallel_run(version=version, func=main, n_workers=n_workers)
+        cls._parallel_run(
+            version=version,
+            func=main,
+            n_workers=n_workers,
+            start_method="threading",
+            package_status_info=package_status_info,
+            limit=limit,
+        )
